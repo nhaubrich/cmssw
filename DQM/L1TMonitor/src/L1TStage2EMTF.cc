@@ -1,8 +1,8 @@
 #include <string>
 #include <vector>
-
+#include <iostream>
 #include "DQM/L1TMonitor/interface/L1TStage2EMTF.h"
-
+using namespace std;
 
 L1TStage2EMTF::L1TStage2EMTF(const edm::ParameterSet& ps) 
     : emtfToken(consumes<l1t::EMTFOutputCollection>(ps.getParameter<edm::InputTag>("emtfSource"))),
@@ -22,7 +22,7 @@ void L1TStage2EMTF::bookHistograms(DQMStore::IBooker& ibooker, const edm::Run&, 
   std::vector<std::string> label = {"4/2", "4/1", "3/2", "3/1", "2/2", "2/1", "1/3", "1/2", "1/1"};
 
   ibooker.setCurrentFolder(monitorDir);
-
+  emtfChamber = ibooker.book1D("chambers", "chambers", 20, -1.5,18.5);
   // ME (LCTs) Monitor Elements
   emtfErrors = ibooker.book1D("emtfErrors", "EMTF Errors", 6, 0, 6);
   emtfErrors->setAxisTitle("Error Type (Corruptions not implemented)", 1);
@@ -168,10 +168,10 @@ void L1TStage2EMTF::analyze(const edm::Event& e, const edm::EventSetup& c) {
 
     // Event Record Header
     const l1t::emtf::EventHeader* EventHeader = EMTFOutput->PtrEventHeader();
-    int Endcap = EventHeader->Endcap();
-    int Sector = EventHeader->SP_ts();
-    if (Sector > 6) Sector -= 8;
-
+    int Endcap = EventHeader->Endcap(); //-1 or +1
+    int Sector = EventHeader->Sector()-1;// (1-6)-1
+   
+    
     // Check if FMM Signal was good
     if (EventHeader->Rdy() == 0) emtfErrors->Fill(5);
 
@@ -179,54 +179,62 @@ void L1TStage2EMTF::analyze(const edm::Event& e, const edm::EventSetup& c) {
     const l1t::emtf::MECollection* MECollection = EMTFOutput->PtrMECollection();
 
     for (std::vector<l1t::emtf::ME>::const_iterator ME = MECollection->begin(); ME != MECollection->end(); ++ME) {
-      int Station = ME->Station();
-      int CSCID = ME->CSC_ID();
-      int half_strip = ME->Strip();
+      int Station = ME->Station(); //1,2,3,or 4
+      int CSCID = ME->CSC_ID(); //0-8
+      int half_strip = ME->Strip(); 
       int wire_group = ME->Wire();
       float bin_offset;
       int histogram_index;
+      int Ring = ME->Ring();
 
+      emtfChamber->Fill(Ring);
+
+      if (Ring==4) {
+        Station = 0;//make station ME1/1a = station 0
+        Ring =1;
+      }
       if (ME->SE()) emtfErrors->Fill(1);
       if (ME->SM()) emtfErrors->Fill(2);
       if (ME->BXE()) emtfErrors->Fill(3);
       if (ME->AF()) emtfErrors->Fill(4);
 
-      if (Station == 0 || Station == 1) {
+      if ( Station == 0 || Station == 1) {
         if (CSCID < 3) {
-          bin_offset = 0.5;
+          bin_offset = 0.5;//1/1 goes to .5
         } else if (CSCID > 2 && CSCID < 6) {
-          bin_offset = 1.5;
+          bin_offset = 1.5;// 1/2 goes to 1.5
         } else {
-          bin_offset = 2.5;
+          bin_offset = 2.5;// 1/3 goes to 2.5
         }
       } else {
         if (CSCID < 3) {
           if (Station == 2) {
-            bin_offset = 3.5;
+            bin_offset = 3.5;// 2/1 3.5
           } else if (Station == 3) {
-            bin_offset = 5.5;
+            bin_offset = 5.5;// 3/1 5.5
           } else {
-            bin_offset = 7.5;
+            bin_offset = 7.5;// 4/1 7.5
           }
         } else {
           if (Station == 2) {
-            bin_offset = 4.5;
+            bin_offset = 4.5;// 2/2 4.5
           } else if (Station == 3) {
-            bin_offset = 6.5;
+            bin_offset = 6.5;// 3/2 6.5
           } else {
-            bin_offset = 8.5;
+            bin_offset = 8.5;// 4/2 8.5
           }
         }
       }
-   
-      histogram_index = int(8.5 + Endcap * bin_offset);
+  
+    //bin_offset = Ring+Station+0.5;
+    histogram_index = int(8.5 + Endcap * bin_offset);
 
       emtfLCTBX->Fill(ME->Tbin_num(), Endcap * bin_offset);
       emtfLCTStrip[histogram_index]->Fill(half_strip);
       emtfLCTWire[histogram_index]->Fill(wire_group);
 
       if (bin_offset == 0.5) {
-          emtfChamberStrip[histogram_index]->Fill((Sector * 6) + (CSCID + Station *3 ), half_strip);
+          emtfChamberStrip[histogram_index]->Fill(((Sector) * 6) + (CSCID + Station *3 ), half_strip);
 	  emtfChamberWire[histogram_index]->Fill((Sector * 6) + (CSCID + Station *3 ), wire_group);
       } else if (bin_offset == 1.5) {
           emtfChamberStrip[histogram_index]->Fill((Sector * 6) + (CSCID + Station * 3 - 3), half_strip);
@@ -258,7 +266,7 @@ void L1TStage2EMTF::analyze(const edm::Event& e, const edm::EventSetup& c) {
       int Quality = SP->Quality();
       int Mode = SP->Mode();
 
-      if (Quality == 0) {
+            if (Quality == 0) {
         emtfnLCTs->Fill(0);
       } else if (Quality == 1 || Quality == 2 || Quality == 4 || Quality == 8) {
         emtfnLCTs->Fill(1);
@@ -284,4 +292,3 @@ void L1TStage2EMTF::analyze(const edm::Event& e, const edm::EventSetup& c) {
   }
   emtfnTracks->Fill(nTracks);
 }
-

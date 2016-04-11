@@ -31,6 +31,8 @@ class L1TStage2EMTF : public DQMEDAnalyzer {
   std::string monitorDir;
   bool verbose;
 
+  MonitorElement* emtfChamber;
+
   MonitorElement* emtfErrors;
   MonitorElement* emtfLCTBX;
   MonitorElement* emtfLCTStrip[18];
