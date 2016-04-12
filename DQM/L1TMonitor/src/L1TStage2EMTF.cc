@@ -187,17 +187,17 @@ void L1TStage2EMTF::analyze(const edm::Event& e, const edm::EventSetup& c) {
       int histogram_index;
       int Ring = ME->Ring();
 
-      emtfChamber->Fill(Ring);
-
+      
       if (Ring==4) {
-        Station = 0;//make station ME1/1a = station 0
-        Ring =1;
+        Station = 0;//make station ME1a = station 0
+        Ring = 1;
       }
       if (ME->SE()) emtfErrors->Fill(1);
       if (ME->SM()) emtfErrors->Fill(2);
       if (ME->BXE()) emtfErrors->Fill(3);
       if (ME->AF()) emtfErrors->Fill(4);
 
+      /*
       if ( Station == 0 || Station == 1) {
         if (CSCID < 3) {
           bin_offset = 0.5;//1/1 goes to .5
@@ -225,8 +225,23 @@ void L1TStage2EMTF::analyze(const edm::Event& e, const edm::EventSetup& c) {
           }
         }
       }
-  
-    //bin_offset = Ring+Station+0.5;
+    */
+
+    if (Station == 0 || Station == 1){
+      bin_offset = Station + Ring - 1.5 + (1-Station);
+    }else{
+      bin_offset = Station + Ring + (Station - 1.5);
+    }
+    emtfChamber->Fill(ME->Subsector());
+    cout << Station << endl;
+    cout << (ME->Subsector()) << endl;
+    cout << endl;
+    //cout << Ring << endl;
+    //cout << bin_offset << endl;
+    
+    if (bin_offset > 8.5) bin_offset = 8.5;
+
+
     histogram_index = int(8.5 + Endcap * bin_offset);
 
       emtfLCTBX->Fill(ME->Tbin_num(), Endcap * bin_offset);
@@ -234,7 +249,7 @@ void L1TStage2EMTF::analyze(const edm::Event& e, const edm::EventSetup& c) {
       emtfLCTWire[histogram_index]->Fill(wire_group);
 
       if (bin_offset == 0.5) {
-          emtfChamberStrip[histogram_index]->Fill(((Sector) * 6) + (CSCID + Station *3 ), half_strip);
+          emtfChamberStrip[histogram_index]->Fill((Sector * 6) + (CSCID + Station *3 ), half_strip);
 	  emtfChamberWire[histogram_index]->Fill((Sector * 6) + (CSCID + Station *3 ), wire_group);
       } else if (bin_offset == 1.5) {
           emtfChamberStrip[histogram_index]->Fill((Sector * 6) + (CSCID + Station * 3 - 3), half_strip);
@@ -266,7 +281,7 @@ void L1TStage2EMTF::analyze(const edm::Event& e, const edm::EventSetup& c) {
       int Quality = SP->Quality();
       int Mode = SP->Mode();
 
-            if (Quality == 0) {
+      if (Quality == 0) {
         emtfnLCTs->Fill(0);
       } else if (Quality == 1 || Quality == 2 || Quality == 4 || Quality == 8) {
         emtfnLCTs->Fill(1);
