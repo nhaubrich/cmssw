@@ -189,7 +189,7 @@ void L1TStage2EMTF::analyze(const edm::Event& e, const edm::EventSetup& c) {
       int Ring = ME->Ring();
       
       if (Ring==4) {
-        Station = 0;//make station ME1a = station 0
+        //Station = 0;//make station ME1a = station 0
         Ring = 1;
       }
       if (ME->SE()) emtfErrors->Fill(1);
