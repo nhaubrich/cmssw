@@ -42,7 +42,7 @@ void L1TStage2EMTF::bookHistograms(DQMStore::IBooker& ibooker, const edm::Run&, 
   for (int bin = 1, bin_label = -4; bin <= 9; ++bin, ++bin_label) {
     emtfLCTBX->setBinLabel(bin, std::to_string(bin_label), 1);
     emtfLCTBX->setBinLabel(bin, "ME-" + suffix_label[bin - 1], 2);
-    emtfLCTBX->setBinLabel(18 - bin, "ME+" + suffix_label[bin - 1], 2);
+    emtfLCTBX->setBinLabel(19 - bin, "ME+" + suffix_label[bin - 1], 2);
   }
 
   for (int hist = 0, i = 0; hist < 18; ++hist, i = hist % 9) {
@@ -135,6 +135,9 @@ void L1TStage2EMTF::bookHistograms(DQMStore::IBooker& ibooker, const edm::Run&, 
   emtfTrackPhi = ibooker.book1D("emtfTrackPhi", "EMTF Track #phi", 126, -3.15, 3.15);
   emtfTrackPhi->setAxisTitle("Track #phi", 1);
 
+  emtfHQPhi = ibooker.book1D("emtfHQPhi", "EMTF High Quality #phi",126, -3.15,3.15);
+  emtfHQPhi->setAxisTitle("Track #phi",1);
+  
   emtfTrackOccupancy = ibooker.book2D("emtfTrackOccupancy", "EMTF Track Occupancy", 100, -2.5, 2.5, 126, -3.15, 3.15);
   emtfTrackOccupancy->setAxisTitle("#eta", 1);
   emtfTrackOccupancy->setAxisTitle("#phi", 2);
@@ -308,6 +311,7 @@ void L1TStage2EMTF::analyze(const edm::Event& e, const edm::EventSetup& c) {
       emtfMode->Fill(Mode);
       emtfQuality->Fill(Quality);
       emtfQualityvsMode->Fill(Mode, Quality);      
+      if (Mode == 15) emtfHQPhi->Fill(Phi_GMT_global_rad);
 
       ++nTracksEvent;
     }
