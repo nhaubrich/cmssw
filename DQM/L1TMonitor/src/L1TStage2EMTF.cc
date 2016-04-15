@@ -1,8 +1,8 @@
 #include <string>
 #include <vector>
-
+#include <iostream>
 #include "DQM/L1TMonitor/interface/L1TStage2EMTF.h"
-
+using namespace std;
 
 L1TStage2EMTF::L1TStage2EMTF(const edm::ParameterSet& ps) 
     : inputToken(consumes<l1t::EMTFOutputCollection>(ps.getParameter<edm::InputTag>("emtfSource"))),
@@ -67,11 +67,11 @@ void L1TStage2EMTF::bookHistograms(DQMStore::IBooker& ibooker, const edm::Run&, 
     emtfLCTWire[hist] = ibooker.book1D("emtfLCTWire" + name, "EMTF Wiregroup " + label, 128, 0, 128);
     emtfLCTWire[hist]->setAxisTitle("Anode Wiregroup, " + label, 1);
 
-    emtfChamberStrip[hist] = ibooker.book2D("emtfChamberStrip" + name, "EMTF Halfstrip " + label, n_xbins, 1, n_xbins + 1, 256, 0, 256);
+    emtfChamberStrip[hist] = ibooker.book2D("emtfChamberStrip" + name, "EMTF Halfstrip " + label, n_xbins, 1, 1+n_xbins, 256, 0, 256);
     emtfChamberStrip[hist]->setAxisTitle("Chamber, " + label, 1);
     emtfChamberStrip[hist]->setAxisTitle("Cathode Halfstrip", 2);
 
-    emtfChamberWire[hist] = ibooker.book2D("emtfChamberWire" + name, "EMTF Wiregroup " + label, n_xbins, 1, n_xbins + 1, 128, 0, 128);
+    emtfChamberWire[hist] = ibooker.book2D("emtfChamberWire" + name, "EMTF Wiregroup " + label, n_xbins, 1, 1+n_xbins, 128, 0, 128);
     emtfChamberWire[hist]->setAxisTitle("Chamber, " + label, 1);
     emtfChamberWire[hist]->setAxisTitle("Anode Wiregroup", 2);
 
@@ -198,9 +198,9 @@ void L1TStage2EMTF::analyze(const edm::Event& e, const edm::EventSetup& c) {
     // Event Record Header
     const l1t::emtf::EventHeader* EventHeader = EMTFOutput->PtrEventHeader();
     int Endcap = EventHeader->Endcap();
-    int Sector = EventHeader->SP_ts();
-    if (Sector > 6) Sector -= 8;
-
+    //int Sector = EventHeader->SP_ts();
+    //if (Sector > 6) Sector -= 8;
+    //cout << "Header Sector " << EventHeader->SP_ts() << endl;
     if (!EventHeader->Rdy()) emtfErrors->Fill(5);
 
     // ME (LCTs) Data Record
@@ -214,10 +214,22 @@ void L1TStage2EMTF::analyze(const edm::Event& e, const edm::EventSetup& c) {
       //int Neighbor = ME->Neighbor();
       int Strip = ME->Strip();
       int Wire = ME->Wire();
+      
+      int Sector = ME->Sector();
+      //cout << "Sector " << Sector << endl;
 
       // Evaluate histogram index and chamber number with respect to station and ring.
-      int hist_index = 0, chamber_number = 0;
+      int hist_index = 0, chamber_number = 0;//, nhist_index = 0, nchamber_number = 0;
+      cout << "Endcap: " << Endcap << " , Station: " << Station << " , Ring: " << Ring << " , Sector: " << Sector << " , CSC_ID: " << CSC_ID << endl;
+       
+      if (Station > 1 && Ring == 1) chamber_number = (Sector * 3) + CSC_ID + (Ring * -3);
+      else chamber_number = ((Sector-1) * 6) + CSC_ID + -3*((Ring-1) % 3);
+      if (Subsector == 2) chamber_number +=3;
 
+      if (Station == 1) hist_index = 8 - (Ring - 1) % 3;
+      if (Station > 1) hist_index = 8 - (Station * 2 + Ring - 2);
+      
+     /* 
       if (Station == 1) {
         if (Ring == 1 || Ring == 4) {
           hist_index = 8;
@@ -249,7 +261,12 @@ void L1TStage2EMTF::analyze(const edm::Event& e, const edm::EventSetup& c) {
         }
         chamber_number = (Sector * 6) + CSC_ID - 3;
       }
-
+      
+      cout << nchamber_number << endl;
+      cout << chamber_number << endl;
+      cout << nhist_index << endl;
+      cout << hist_index << endl;
+      */
       if (Endcap > 0) hist_index = 17 - hist_index;
 
       if (ME->SE()) emtfErrors->Fill(1);
@@ -266,9 +283,9 @@ void L1TStage2EMTF::analyze(const edm::Event& e, const edm::EventSetup& c) {
       emtfChamberWire[hist_index]->Fill(chamber_number, Wire);
 
       if (Subsector == 1) {
-        emtfChamberOccupancy->Fill((Sector * 9) + CSC_ID, Endcap * (Station - 0.5));
+        emtfChamberOccupancy->Fill(((Sector-1) * 9) + CSC_ID, Endcap * (Station - 0.5));
       } else {
-        emtfChamberOccupancy->Fill((Sector * 9) + CSC_ID, Endcap * (Station + 0.5));
+        emtfChamberOccupancy->Fill(((Sector-1) * 9) + CSC_ID, Endcap * (Station + 0.5));
       }
     }
 
@@ -290,7 +307,7 @@ void L1TStage2EMTF::analyze(const edm::Event& e, const edm::EventSetup& c) {
       if (Phi_GMT_global_rad > M_PI) Phi_GMT_global_rad -= 2*M_PI;
       int Quality = SP->Quality();
       int Mode = SP->Mode();
-
+      int Sector;
       if (Mode == 0) {
         emtfnLCTs->Fill(0);
       } else if (Mode == 1 || Mode == 2 || Mode == 4 || Mode == 8) {
@@ -302,8 +319,15 @@ void L1TStage2EMTF::analyze(const edm::Event& e, const edm::EventSetup& c) {
       } else {
         emtfnLCTs->Fill(4);
       }
+     
+      //Get a sector number that isn't -99
+      if (Mode % 2 ==1) Sector = SP->ME4_sector();
+      else if (Mode % 4 == 2) Sector = SP->ME3_sector();
+      else if (Mode % 8 == 4) Sector = SP->ME2_sector();
+      else Sector = SP->ME1_sector();     
 
-      emtfTrackBX->Fill(Endcap * (Sector + 0.5), SP->TBIN_num());
+      
+      emtfTrackBX->Fill(Endcap * (Sector - 0.5), SP->TBIN_num());
       emtfTrackPt->Fill(Pt);
       emtfTrackEta->Fill(Eta);
       emtfTrackPhi->Fill(Phi_GMT_global_rad);
