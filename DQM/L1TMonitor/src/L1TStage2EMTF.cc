@@ -1,8 +1,8 @@
 #include <string>
 #include <vector>
-#include <iostream>
+
 #include "DQM/L1TMonitor/interface/L1TStage2EMTF.h"
-using namespace std;
+
 
 L1TStage2EMTF::L1TStage2EMTF(const edm::ParameterSet& ps) 
     : inputToken(consumes<l1t::EMTFOutputCollection>(ps.getParameter<edm::InputTag>("emtfSource"))),
@@ -199,8 +199,7 @@ void L1TStage2EMTF::analyze(const edm::Event& e, const edm::EventSetup& c) {
     const l1t::emtf::EventHeader* EventHeader = EMTFOutput->PtrEventHeader();
     int Endcap = EventHeader->Endcap();
     //int Sector = EventHeader->SP_ts();
-    //if (Sector > 6) Sector -= 8;
-    //cout << "Header Sector " << EventHeader->SP_ts() << endl;
+     
     if (!EventHeader->Rdy()) emtfErrors->Fill(5);
 
     // ME (LCTs) Data Record
@@ -216,11 +215,9 @@ void L1TStage2EMTF::analyze(const edm::Event& e, const edm::EventSetup& c) {
       int Wire = ME->Wire();
       
       int Sector = ME->Sector();
-      //cout << "Sector " << Sector << endl;
 
       // Evaluate histogram index and chamber number with respect to station and ring.
       int hist_index = 0, chamber_number = 0;//, nhist_index = 0, nchamber_number = 0;
-      cout << "Endcap: " << Endcap << " , Station: " << Station << " , Ring: " << Ring << " , Sector: " << Sector << " , CSC_ID: " << CSC_ID << endl;
        
       if (Station > 1 && Ring == 1) chamber_number = (Sector * 3) + CSC_ID + (Ring * -3);
       else chamber_number = ((Sector-1) * 6) + CSC_ID + -3*((Ring-1) % 3);
@@ -260,14 +257,8 @@ void L1TStage2EMTF::analyze(const edm::Event& e, const edm::EventSetup& c) {
           hist_index = 0;
         }
         chamber_number = (Sector * 6) + CSC_ID - 3;
-      }
-      
-      cout << nchamber_number << endl;
-      cout << chamber_number << endl;
-      cout << nhist_index << endl;
-      cout << hist_index << endl;
-      */
-      if (Endcap > 0) hist_index = 17 - hist_index;
+      }*/
+     if (Endcap > 0) hist_index = 17 - hist_index;
 
       if (ME->SE()) emtfErrors->Fill(1);
       if (ME->SM()) emtfErrors->Fill(2);
@@ -320,7 +311,7 @@ void L1TStage2EMTF::analyze(const edm::Event& e, const edm::EventSetup& c) {
         emtfnLCTs->Fill(4);
       }
      
-      //Get a sector number that isn't -99
+      //Get a sector number from a station that found a hit
       if (Mode % 2 ==1) Sector = SP->ME4_sector();
       else if (Mode % 4 == 2) Sector = SP->ME3_sector();
       else if (Mode % 8 == 4) Sector = SP->ME2_sector();
