@@ -130,10 +130,15 @@ l1tStage2EventInfoClient = cms.EDAnalyzer("L1TEventInfoClient",
                         SystemDisable  = cms.uint32(0),
                         QualityTests = cms.VPSet(
                             cms.PSet(
-                                QualityTestName = cms.string(""),
-                                QualityTestHist = cms.string(""),
-                                QualityTestSummaryEnabled = cms.uint32(0)
+                                QualityTestName = cms.string("DeadChannels_EMTF_2D"),
+                                QualityTestHist = cms.string("L1T2016/L1TStage2EMTF/emtfChamberOccupancy"),
+                                QualityTestSummaryEnabled = cms.uint32(1)
                                 ),
+                            cms.PSet(
+                                QualityTestName = cms.string("HotChannels_EMTF_2D"),
+                                QualityTestHist = cms.string("L1T2016/L1TStage2EMTF/emtfChamberOccupancy"),
+                                QualityTestSummaryEnabled = cms.uint32(1)
+                                ),                           
                             )
                         ),
                     cms.PSet(

@@ -6,12 +6,12 @@ process = cms.Process("L1TStage2DQM")
 # Event Source and Condition
 
 # Live Online DQM in P5
-process.load("DQM.Integration.config.inputsource_cfi")
-process.load("DQM.Integration.config.FrontierCondition_GT_cfi")
+#process.load("DQM.Integration.config.inputsource_cfi")
+#process.load("DQM.Integration.config.FrontierCondition_GT_cfi")
 
 # Testing in lxplus
-#process.load("DQM.Integration.config.fileinputsource_cfi")
-#process.load("DQM.Integration.config.FrontierCondition_GT_Offline_cfi") 
+process.load("DQM.Integration.config.fileinputsource_cfi")
+process.load("DQM.Integration.config.FrontierCondition_GT_Offline_cfi") 
 
 # Required to load EcalMappingRecord
 process.load("Configuration.StandardSequences.GeometryRecoDB_cff")
@@ -23,7 +23,7 @@ process.load("DQM.Integration.config.environment_cfi")
 
 process.dqmEnv.subSystemFolder = "L1T2016"
 process.dqmSaver.tag = "L1T2016"
-process.DQMStore.referenceFileName = "/dqmdata/dqm/reference/l1t_reference.root"
+#process.DQMStore.referenceFileName = "/dqmdata/dqm/reference/l1t_reference.root"
 
 process.dqmEndPath = cms.EndPath(process.dqmEnv * process.dqmSaver)
 
@@ -59,19 +59,19 @@ process.selfFatEventFilter = cms.EDFilter("HLTL1NumberFilter",
 process.load("DQM.L1TMonitor.L1TStage2_cff")
 
 process.l1tMonitorPath = cms.Path(
-    process.hltFatEventFilter +
+#    process.hltFatEventFilter +
 #    process.selfFatEventFilter +
     process.l1tStage2Unpack +
     process.l1tStage2OnlineDQM
 )
 
 # Remove DQM Modules
-#process.l1tStage2online.remove(process.l1tStage2CaloLayer1)
-#process.l1tStage2online.remove(process.l1tStage2CaloLayer2)
-#process.l1tStage2online.remove(process.l1tStage2Bmtf)
-#process.l1tStage2online.remove(process.l1tStage2Emtf)
-#process.l1tStage2online.remove(process.l1tStage2uGMT)
-#process.l1tStage2online.remove(process.l1tStage2uGt)
+process.l1tStage2OnlineDQM.remove(process.l1tStage2CaloLayer1)
+process.l1tStage2OnlineDQM.remove(process.l1tStage2CaloLayer2)
+process.l1tStage2OnlineDQM.remove(process.l1tStage2Bmtf)
+#process.l1tStageOnl2online.remove(process.l1tStage2Emtf)
+process.l1tStage2OnlineDQM.remove(process.l1tStage2uGMT)
+process.l1tStage2OnlineDQM.remove(process.l1tStage2uGt)
 
 #--------------------------------------------------
 # Stage2 Quality Tests
@@ -89,7 +89,7 @@ process.l1tMonitorEndPath = cms.EndPath(process.l1tMonitorEndPathSeq)
 # L1T Online DQM Schedule
 
 process.schedule = cms.Schedule(
-    process.rawToDigiPath,
+    #process.rawToDigiPath,
     process.l1tMonitorPath,
     process.l1tStage2MonitorClientPath,
     process.l1tMonitorEndPath,
