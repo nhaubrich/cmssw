@@ -109,11 +109,11 @@ void L1TdeStage2EMTF::bookHistograms(DQMStore::IBooker& ibooker, const edm::Run&
   emtfEmulPhi = ibooker.book1D("emtfEmulPhi", "EMTF Track Emul #phi",126,-3.15,3.15);
   emtfEmulEta->setAxisTitle("Track #phi",1);
 
- emtfDataPt = ibooker.book1D("emtfDataPt", "EMTF Track Data Pt",256,1,257 );
-  emtfDataPt->setAxisTitle("Track Pt",1);
+ emtfDataPt = ibooker.book1D("emtfDataPt", "EMTF Track Data p_{T}",256,1,257 );
+  emtfDataPt->setAxisTitle("Track p_{T}",1);
 
-  emtfEmulPt = ibooker.book1D("emtfEmulPt", "EMTF Track Emul Pt", 256,1,257);
-  emtfEmulPt->setAxisTitle("Track Pt",1);
+  emtfEmulPt = ibooker.book1D("emtfEmulPt", "EMTF Track Emul p_{T}", 256,1,257);
+  emtfEmulPt->setAxisTitle("Track p_{T}",1);
 
 
   emtfDataMode = ibooker.book1D("emtfDataMode", "EMTF Track Data Mode", 16,0,16);
@@ -148,9 +148,9 @@ void L1TdeStage2EMTF::bookHistograms(DQMStore::IBooker& ibooker, const edm::Run&
   emtfMatchPhi->setAxisTitle("Data #phi",1);
   emtfMatchPhi->setAxisTitle("Emul #phi", 2);
 
-  emtfMatchPt = ibooker.book2D("emtfMatchPt","EMTF Match Pt", 256, 1, 257, 256, 1, 257);
-  emtfMatchPt->setAxisTitle("Data Pt",1);
-  emtfMatchPt->setAxisTitle("Emul Pt", 2);
+  emtfMatchPt = ibooker.book2D("emtfMatchPt","EMTF Match p_{T}", 256, 1, 257, 256, 1, 257);
+  emtfMatchPt->setAxisTitle("Data p_{T}",1);
+  emtfMatchPt->setAxisTitle("Emul p_{T}", 2);
 
   emtfDifWire = ibooker.book1D("emtfDifWire", "EMTF Dif Wire", 127, 1, 128);
   emtfDifWire->setAxisTitle("Wire",1);
@@ -268,7 +268,6 @@ void L1TdeStage2EMTF::analyze(const edm::Event& e, const edm::EventSetup& c) {
     //increment pseudobin for phi ratio plot
     int phibin = floor((phi_glob_rad*20/6.3)+10.5);
     emulphi[phibin]++;
-    std::cout << "Emul Eta: " << eta << endl;
   }
     
   //Best Match Hit plots
