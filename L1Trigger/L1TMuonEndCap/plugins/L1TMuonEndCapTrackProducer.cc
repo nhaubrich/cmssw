@@ -532,9 +532,12 @@ for(int sect=0;sect<12;sect++){
 
 
 //ev.put( FoundTracks, "DataITC");
-ev.put( OutputCands, "EMTF");
+ ev.put( OutputCands, "EMTF");
  ev.put( OutputHits, "EMTF"); 
  ev.put( OutputTracks, "EMTF");
+ ev.put( OutHits, "EMTF");
+ ev.put( OutTracks, "EMTF");
+
   //std::cout<<"End Upgraded Track Finder Prducer:::::::::::::::::::::::::::\n:::::::::::::::::::::::::::::::::::::::::::::::::\n\n";
 
 }//analyzer
