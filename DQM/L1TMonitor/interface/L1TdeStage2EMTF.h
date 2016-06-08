@@ -9,6 +9,9 @@
 #include "DQMServices/Core/interface/MonitorElement.h"
 
 #include "DataFormats/L1TMuon/interface/RegionalMuonCand.h"
+#include "DataFormats/L1TMuon/interface/EMTFDaqOut.h"
+#include "DataFormats/L1TMuon/interface/EMTFHit.h"
+#include "DataFormats/L1TMuon/interface/EMTFTrack.h"
 
 
 class L1TdeStage2EMTF : public DQMEDAnalyzer {
@@ -29,11 +32,20 @@ class L1TdeStage2EMTF : public DQMEDAnalyzer {
 
   edm::EDGetTokenT<l1t::RegionalMuonCandBxCollection> dataToken;
   edm::EDGetTokenT<l1t::RegionalMuonCandBxCollection> emulToken;
+  edm::EDGetTokenT<l1t::EMTFHitCollection> datahitToken;
+  edm::EDGetTokenT<l1t::EMTFHitCollection> emulhitToken;
+  edm::EDGetTokenT<l1t::EMTFTrackCollection> datatrackToken;
+  edm::EDGetTokenT<l1t::EMTFTrackCollection> emultrackToken;
+
   std::string monitorDir;
   bool verbose;
+  int emulphi[21] = {0};
+  int dataphi[21] = {0};
+  int dataTracks = 0;
+  int emulTracks = 0;
 
   MonitorElement* emtfComparenMuonsEvent;
-
+//RegionalMuonCand Elements
   MonitorElement* emtfDataBX;
   MonitorElement* emtfEmulBX;
   MonitorElement* emtfDatahwPt;
@@ -49,6 +61,32 @@ class L1TdeStage2EMTF : public DQMEDAnalyzer {
   MonitorElement* emtfComparehwEta;
   MonitorElement* emtfComparehwPhi;
   MonitorElement* emtfComparehwQual;*/
+
+  //Track Elements
+  MonitorElement* emtfDataEta;
+  MonitorElement* emtfDataPhi;
+  MonitorElement* emtfDataPt;
+  MonitorElement* emtfDataMode;
+  MonitorElement* emtfDataQuality;
+
+  MonitorElement* emtfEmulEta;
+  MonitorElement* emtfEmulPhi;
+  MonitorElement* emtfEmulPt;
+  MonitorElement* emtfEmulMode;
+  MonitorElement* emtfEmulQuality;
+  MonitorElement* emtfRatioPhi;
+  MonitorElement* emtfMatchEta;
+  MonitorElement* emtfMatchPhi;
+  MonitorElement* emtfMatchPt;
+
+  //Hit Elements
+  MonitorElement* emtfMatchWire;
+  MonitorElement* emtfMatchStrip;
+  MonitorElement* emtfDifWire;
+  MonitorElement* emtfDifStrip;
+
+  MonitorElement* emtfCollectionSizes;
+
 };
 
 #endif
