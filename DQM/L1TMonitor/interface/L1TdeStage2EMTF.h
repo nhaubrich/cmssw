@@ -39,54 +39,22 @@ class L1TdeStage2EMTF : public DQMEDAnalyzer {
 
   std::string monitorDir;
   bool verbose;
-  int emulphi[21] = {0};
-  int dataphi[21] = {0};
   int dataTracks = 0;
   int emulTracks = 0;
 
   MonitorElement* emtfComparenMuonsEvent;
-//RegionalMuonCand Elements
-  MonitorElement* emtfDataBX;
-  MonitorElement* emtfEmulBX;
-  MonitorElement* emtfDatahwPt;
-  MonitorElement* emtfEmulhwPt;
-  MonitorElement* emtfDatahwEta;
-  MonitorElement* emtfEmulhwEta;
-  MonitorElement* emtfDatahwPhi;
-  MonitorElement* emtfEmulhwPhi;
-  MonitorElement* emtfDatahwQual;
-  MonitorElement* emtfEmulhwQual;
-
-  /*MonitorElement* emtfComparehwPt;
-  MonitorElement* emtfComparehwEta;
-  MonitorElement* emtfComparehwPhi;
-  MonitorElement* emtfComparehwQual;*/
 
   //Track Elements
-  MonitorElement* emtfDataEta;
-  MonitorElement* emtfDataPhi;
-  MonitorElement* emtfDataPt;
-  MonitorElement* emtfDataMode;
-  MonitorElement* emtfDataQuality;
-
-  MonitorElement* emtfEmulEta;
-  MonitorElement* emtfEmulPhi;
-  MonitorElement* emtfEmulPt;
-  MonitorElement* emtfEmulMode;
-  MonitorElement* emtfEmulQuality;
-  MonitorElement* emtfRatioPhi;
   MonitorElement* emtfMatchEta;
   MonitorElement* emtfMatchPhi;
   MonitorElement* emtfMatchPt;
+  MonitorElement* emtfMatchTrackBx;
+  MonitorElement* emtfMatchQuality;
+  MonitorElement* emtfMatchMode;
 
   //Hit Elements
-  MonitorElement* emtfMatchWire;
-  MonitorElement* emtfMatchStrip;
-  MonitorElement* emtfDifWire;
-  MonitorElement* emtfDifStrip;
-
   MonitorElement* emtfCollectionSizes;
-
+  
 };
 
 #endif
