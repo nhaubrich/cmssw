@@ -109,7 +109,7 @@ void L1TdeStage2EMTF::bookHistograms(DQMStore::IBooker& ibooker, const edm::Run&
   emtfEmulPhi = ibooker.book1D("emtfEmulPhi", "EMTF Track Emul #phi",126,-3.15,3.15);
   emtfEmulEta->setAxisTitle("Track #phi",1);
 
- emtfDataPt = ibooker.book1D("emtfDataPt", "EMTF Track Data p_{T}",256,1,257 );
+  emtfDataPt = ibooker.book1D("emtfDataPt", "EMTF Track Data p_{T}",256,1,257 );
   emtfDataPt->setAxisTitle("Track p_{T}",1);
 
   emtfEmulPt = ibooker.book1D("emtfEmulPt", "EMTF Track Emul p_{T}", 256,1,257);
@@ -140,6 +140,16 @@ void L1TdeStage2EMTF::bookHistograms(DQMStore::IBooker& ibooker, const edm::Run&
   emtfMatchStrip->setAxisTitle("Data Strip", 1);
   emtfMatchStrip->setAxisTitle("Emul Strip", 2);
 
+  emtfMatchHitBx = ibooker.book2D("emtfMatchHitBx","EMTF Match Hit Bx", 9, -4, 4, 9, -4 ,4);
+  emtfMatchHitBx->setAxisTitle("Data Hit Bx", 1);
+  emtfMatchHitBx->setAxisTitle("Emul Hit Bx", 2);
+
+  emtfDataHitBx = ibooker.book1D("emtfDataHitBx","EMTF Data Hit Bx", 8, -4,4);
+  emtfDataHitBx->setAxisTitle("BX Timing",1);
+
+  emtfEmulHitBx = ibooker.book1D("emtfEmulHitBx","EMTF Emul Hit Bx", 8, -4,4);
+  emtfEmulHitBx->setAxisTitle("BX Timing",1);
+
   emtfMatchEta = ibooker.book2D("emtfMatchEta","EMTF Match #eta", 100, -2.5, 2.5, 100, -2.5, 2.5);
   emtfMatchEta->setAxisTitle("Data #eta",1);
   emtfMatchEta->setAxisTitle("Emul #eta", 2);
@@ -152,6 +162,11 @@ void L1TdeStage2EMTF::bookHistograms(DQMStore::IBooker& ibooker, const edm::Run&
   emtfMatchPt->setAxisTitle("Data p_{T}",1);
   emtfMatchPt->setAxisTitle("Emul p_{T}", 2);
 
+  emtfMatchTrackBx = ibooker.book2D("emtfMatchTrackBx","EMTF Match Track Bx", 9, -4, 4, 9, -4 ,4);
+  emtfMatchTrackBx->setAxisTitle("Data Track Bx", 1);
+  emtfMatchTrackBx->setAxisTitle("Emul Track Bx", 2);
+
+
   emtfDifWire = ibooker.book1D("emtfDifWire", "EMTF Dif Wire", 127, 1, 128);
   emtfDifWire->setAxisTitle("Wire",1);
   emtfDifWire->setAxisTitle("Positive=data",2);
@@ -160,12 +175,13 @@ void L1TdeStage2EMTF::bookHistograms(DQMStore::IBooker& ibooker, const edm::Run&
   emtfDifStrip->setAxisTitle("Wire",1);
   emtfDifStrip->setAxisTitle("Positive=data",2);
 
-  emtfCollectionSizes = ibooker.book1D("emtfCollectionSizes","EMTF CollectionSizes", 4,0,4);
+  emtfCollectionSizes = ibooker.book1D("emtfCollectionSizes","EMTF CollectionSizes", 6,0,6);
   emtfCollectionSizes->setBinLabel(1,"Data Hits",1);
   emtfCollectionSizes->setBinLabel(2,"Emul Hits",1);
   emtfCollectionSizes->setBinLabel(3,"Data Tracks",1);
   emtfCollectionSizes->setBinLabel(4,"Emul Tracks",1);
-
+  emtfCollectionSizes->setBinLabel(5,"Data Output" ,1);
+  emtfCollectionSizes->setBinLabel(6,"Emul output", 1);
 }
 
 void L1TdeStage2EMTF::analyze(const edm::Event& e, const edm::EventSetup& c) {
@@ -182,12 +198,14 @@ void L1TdeStage2EMTF::analyze(const edm::Event& e, const edm::EventSetup& c) {
 
   for (int itBX = dataMuons->getFirstBX(); itBX <= dataMuons->getLastBX(); ++itBX) {
     for (l1t::RegionalMuonCandBxCollection::const_iterator dataMuon = dataMuons->begin(itBX); dataMuon != dataMuons->end(itBX); ++dataMuon) {
+      
       emtfDataBX->Fill(itBX);
       emtfDatahwPt->Fill(dataMuon->hwPt());
       emtfDatahwEta->Fill(dataMuon->hwEta());
       emtfDatahwPhi->Fill(dataMuon->hwPhi());
       emtfDatahwQual->Fill(dataMuon->hwQual());
-    }
+      emtfCollectionSizes->Fill(4);
+     }
   }
 
   for (int itBX = emulMuons->getFirstBX(); itBX <= emulMuons->getLastBX(); ++itBX) {
@@ -197,13 +215,14 @@ void L1TdeStage2EMTF::analyze(const edm::Event& e, const edm::EventSetup& c) {
       emtfEmulhwEta->Fill(emulMuon->hwEta());
       emtfEmulhwPhi->Fill(emulMuon->hwPhi());
       emtfEmulhwQual->Fill(emulMuon->hwQual());
-    }
+      emtfCollectionSizes->Fill(5);
+     }
   }
 
   //data Hits
   edm::Handle<l1t::EMTFHitCollection> dataHitCollection;
   e.getByToken(datahitToken, dataHitCollection);
-
+  std::cout << "Data Hits:" << endl;
   for (std::vector<l1t::EMTFHit>::const_iterator Hit = dataHitCollection->begin(); Hit != dataHitCollection->end(); ++Hit){
     int Endcap = Hit->Endcap();
     int Station = Hit->Station();
@@ -211,27 +230,40 @@ void L1TdeStage2EMTF::analyze(const edm::Event& e, const edm::EventSetup& c) {
     int Sector = Hit->Sector();
     int Chamber = Hit->Chamber();
     emtfCollectionSizes->Fill(0);
-  }
+    emtfDataHitBx->Fill(Hit->BX());
+  std::cout << Endcap << " " << Station << " " << Ring << " " << Sector << " " << Chamber << " " << Hit->Strip() << " " << Hit->Wire() << " " << Hit->BX() << " " << Hit->Quality() <<  endl;
+
+   }
 
   //emul Hits
   edm::Handle<l1t::EMTFHitCollection> emulHitCollection;
   e.getByToken(emulhitToken, emulHitCollection);
+  std::cout << "Emul Hits:" << endl;
   for(std::vector<l1t::EMTFHit>::const_iterator Hit = emulHitCollection->begin(); Hit != emulHitCollection->end(); ++Hit){
-    int esector = Hit->Sector();
+    int Endcap = Hit->Endcap();
+    int Station = Hit->Station();
+    int Ring = Hit->Ring();
+    int Sector = Hit->Sector();
+    int Chamber = Hit->Chamber();
+    emtfEmulHitBx->Fill(Hit->BX());
     emtfCollectionSizes->Fill(1);
+    std::cout << Endcap << " " << Station << " " << Ring << " " << Sector << " " << Chamber << " " << Hit->Strip() << " " << Hit->Wire() << " " << Hit->BX() << " " << Hit->Quality() << endl;
+
+
   }
   //data Tracks
     edm::Handle<l1t::EMTFTrackCollection> dataTrackCollection;
   e.getByToken(datatrackToken, dataTrackCollection);
 
-
+  std::cout << "Data Tracks:" << endl;
   for (std::vector<l1t::EMTFTrack>::const_iterator Track = dataTrackCollection->begin(); Track != dataTrackCollection->end(); ++Track){
     float eta = Track->Eta();
     float phi_glob_rad = Track->Phi_glob_rad();
     float pt = Track->Pt();
     int mode = Track->Mode();
     int quality = Track->Quality();
-
+    std::cout << eta << " " << phi_glob_rad << " " << pt << " " << mode << " " << quality << " " << Track->BX() << endl;
+    
     emtfDataEta->Fill(eta);
     emtfDataPhi->Fill(phi_glob_rad);
     emtfDataPt->Fill(pt);
@@ -246,7 +278,7 @@ void L1TdeStage2EMTF::analyze(const edm::Event& e, const edm::EventSetup& c) {
        emtfRatioPhi->setBinContent(phiBin+1,(float) dataphi[phiBin]/ (float)emulphi[phiBin]);
     }
   }
-
+  std::cout << "Emul Tracks" << endl;
   //emul Tracks
     edm::Handle<l1t::EMTFTrackCollection> emulTrackCollection;
   e.getByToken(emultrackToken, emulTrackCollection);
@@ -258,6 +290,7 @@ void L1TdeStage2EMTF::analyze(const edm::Event& e, const edm::EventSetup& c) {
     int mode = Track->Mode();
     int quality = Track->Quality();
 
+    std::cout << eta << " " << phi_glob_rad << " " << pt << " " << mode << " " << quality << " " << Track->BX() << endl;
     emtfEmulEta->Fill(eta);
     emtfEmulPhi->Fill(phi_glob_rad);
     emtfEmulPt->Fill(pt);
@@ -279,6 +312,10 @@ void L1TdeStage2EMTF::analyze(const edm::Event& e, const edm::EventSetup& c) {
   int dataStrip = -99;
   int emulStrip = -99;
 
+  int minHitBxDif = 999;
+  int dataHitBx = -99;
+  int emulHitBx = -99;
+
  for (std::vector<l1t::EMTFHit>::const_iterator Hit = dataHitCollection->begin(); Hit != dataHitCollection->end(); ++Hit){
 
     for(std::vector<l1t::EMTFHit>::const_iterator emulHit = emulHitCollection->begin(); emulHit != emulHitCollection->end(); ++emulHit){
@@ -293,6 +330,11 @@ void L1TdeStage2EMTF::analyze(const edm::Event& e, const edm::EventSetup& c) {
         dataStrip = Hit->Strip();
         emulStrip = emulHit->Strip();
       }
+      if(abs((Hit->BX() - emulHit->BX())) < minHitBxDif){
+        minHitBxDif = abs((Hit->BX() - emulHit->BX()));
+        dataHitBx = Hit->BX();
+        emulHitBx = emulHit->BX();
+      }
     }
   }
 
@@ -300,6 +342,7 @@ void L1TdeStage2EMTF::analyze(const edm::Event& e, const edm::EventSetup& c) {
   emtfDifWire->Fill(dataWire - emulWire);
   emtfMatchStrip->Fill(dataStrip, emulStrip);
   emtfDifStrip->Fill(dataStrip - emulStrip);
+  emtfMatchHitBx->Fill(dataHitBx, emulHitBx);
 
   //Best Match Track plots
   float minEtaDif = 999;
@@ -313,6 +356,11 @@ void L1TdeStage2EMTF::analyze(const edm::Event& e, const edm::EventSetup& c) {
   float minPtDif = 999;
   float dataPt = -99;
   float emulPt = -99;
+
+  float minTrackBxDif = 999;
+  float dataTrackBx = -99;
+  float emulTrackBx = -99;
+
 
 for (std::vector<l1t::EMTFTrack>::const_iterator Track = dataTrackCollection->begin(); Track != dataTrackCollection->end(); ++Track){
     for (std::vector<l1t::EMTFTrack>::const_iterator emulTrack = emulTrackCollection->begin(); emulTrack !=emulTrackCollection->end(); ++emulTrack){
@@ -333,10 +381,17 @@ for (std::vector<l1t::EMTFTrack>::const_iterator Track = dataTrackCollection->be
         minPtDif = abs((Track->Pt() - emulTrack->Pt()));
         dataPt = Track->Pt();
         emulPt = emulTrack->Pt();
-      }   
+      }
+     //Track Bx
+     if(abs((Track->BX() - emulTrack->BX())) < minTrackBxDif){
+        minTrackBxDif = abs((Track->BX() - emulTrack->BX()));
+        dataTrackBx = Track->BX();
+        emulTrackBx = emulTrack->BX();
+      }
     }
   }
   emtfMatchEta->Fill(dataEta, emulEta);
   emtfMatchPhi->Fill(dataPhi, emulPhi);
   emtfMatchPt->Fill(dataPt, emulPt);
+  emtfMatchTrackBx->Fill(dataTrackBx, emulTrackBx);
 } 
