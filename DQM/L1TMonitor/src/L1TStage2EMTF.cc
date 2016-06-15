@@ -10,6 +10,7 @@ L1TStage2EMTF::L1TStage2EMTF(const edm::ParameterSet& ps)
       trackToken(consumes<l1t::EMTFTrackCollection>(ps.getParameter<edm::InputTag>("emtfSource"))),
       muonToken(consumes<l1t::RegionalMuonCandBxCollection>(ps.getParameter<edm::InputTag>("emtfSource"))),
       monitorDir(ps.getUntrackedParameter<std::string>("monitorDir", "")),
+      isData(ps.getUntrackedParameter<bool>("isData", false)),
       verbose(ps.getUntrackedParameter<bool>("verbose", false)) {}
 
 L1TStage2EMTF::~L1TStage2EMTF() {}
@@ -21,7 +22,7 @@ void L1TStage2EMTF::beginLuminosityBlock(const edm::LuminosityBlock&, const edm:
 void L1TStage2EMTF::bookHistograms(DQMStore::IBooker& ibooker, const edm::Run&, const edm::EventSetup&) {
 
   ibooker.setCurrentFolder(monitorDir);
-
+  
   // DAQ Output Monitor Elements
   emtfErrors = ibooker.book1D("emtfErrors", "EMTF Errors", 6, 0, 6);
   emtfErrors->setAxisTitle("Error Type (Corruptions Not Implemented)", 1);
@@ -185,24 +186,24 @@ void L1TStage2EMTF::bookHistograms(DQMStore::IBooker& ibooker, const edm::Run&, 
 void L1TStage2EMTF::analyze(const edm::Event& e, const edm::EventSetup& c) {
 
   if (verbose) edm::LogInfo("L1TStage2EMTF") << "L1TStage2EMTF: analyze..." << std::endl;
-
+  if (isData){
   // DAQ Output
-  edm::Handle<l1t::EMTFDaqOutCollection> DaqOutCollection;
-  e.getByToken(daqToken, DaqOutCollection);
-
-  for (std::vector<l1t::EMTFDaqOut>::const_iterator DaqOut = DaqOutCollection->begin(); DaqOut != DaqOutCollection->end(); ++DaqOut) {
-    const l1t::emtf::MECollection* MECollection = DaqOut->PtrMECollection();
-    for (std::vector<l1t::emtf::ME>::const_iterator ME = MECollection->begin(); ME != MECollection->end(); ++ME) {
-      if (ME->SE()) emtfErrors->Fill(1);
-      if (ME->SM()) emtfErrors->Fill(2);
-      if (ME->BXE()) emtfErrors->Fill(3);
-      if (ME->AF()) emtfErrors->Fill(4);
+    edm::Handle<l1t::EMTFDaqOutCollection> DaqOutCollection;
+    e.getByToken(daqToken, DaqOutCollection);
+  
+    for (std::vector<l1t::EMTFDaqOut>::const_iterator DaqOut = DaqOutCollection->begin(); DaqOut != DaqOutCollection->end(); ++DaqOut) {
+      const l1t::emtf::MECollection* MECollection = DaqOut->PtrMECollection();
+      for (std::vector<l1t::emtf::ME>::const_iterator ME = MECollection->begin(); ME != MECollection->end(); ++ME) {
+        if (ME->SE()) emtfErrors->Fill(1);
+        if (ME->SM()) emtfErrors->Fill(2);
+        if (ME->BXE()) emtfErrors->Fill(3);
+        if (ME->AF()) emtfErrors->Fill(4);
+      }
+  
+      const l1t::emtf::EventHeader* EventHeader = DaqOut->PtrEventHeader();
+      if (!EventHeader->Rdy()) emtfErrors->Fill(5);
     }
-
-    const l1t::emtf::EventHeader* EventHeader = DaqOut->PtrEventHeader();
-    if (!EventHeader->Rdy()) emtfErrors->Fill(5);
   }
-
   // Hits (LCTs)
   edm::Handle<l1t::EMTFHitCollection> HitCollection;
   e.getByToken(hitToken, HitCollection);
