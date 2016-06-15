@@ -35,7 +35,9 @@ class L1TStage2EMTF : public DQMEDAnalyzer {
   edm::EDGetTokenT<l1t::EMTFTrackCollection> trackToken;
   edm::EDGetTokenT<l1t::RegionalMuonCandBxCollection> muonToken;
   std::string monitorDir;
+  bool isEmulated;
   bool verbose;
+
 
   MonitorElement* emtfErrors;
 

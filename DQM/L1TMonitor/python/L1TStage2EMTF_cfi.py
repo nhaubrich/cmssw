@@ -4,6 +4,7 @@ l1tStage2Emtf = cms.EDAnalyzer(
     "L1TStage2EMTF",
     emtfSource = cms.InputTag("emtfStage2Digis"),
     monitorDir = cms.untracked.string("L1T2016/L1TStage2EMTF"), 
+    isEmulated = cms.untracked.bool(False),
     verbose = cms.untracked.bool(False),
 )
 

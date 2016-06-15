@@ -80,9 +80,6 @@ DEFINE_FWK_MODULE(L1TdeStage2CaloLayer1);
 #include "DQM/L1TMonitor/interface/L1TdeCSCTF.h"
 DEFINE_FWK_MODULE(L1TdeCSCTF);
 
-#include <DQM/L1TMonitor/interface/L1TdeStage2EMTF.h>
-DEFINE_FWK_MODULE(L1TdeStage2EMTF);
-
 //#include "DQM/L1TMonitor/interface/L1GtHwValidation.h"
 //DEFINE_FWK_MODULE(L1GtHwValidation);
 

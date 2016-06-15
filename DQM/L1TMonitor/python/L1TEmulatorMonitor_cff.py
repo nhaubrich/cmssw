@@ -11,7 +11,7 @@ import FWCore.ParameterSet.Config as cms
 
 # hardware validation sequence - it runs also the L1 emulator
 from L1Trigger.HardwareValidation.L1HardwareValidation_cff import *
-
+print("this is being used")
 # temporary fix for L1 GT emulator configuration in hardware validation
 valGtDigis.RecordLength = cms.vint32(3, 5)
 valGtDigis.AlternativeNrBxBoardDaq = 0x101

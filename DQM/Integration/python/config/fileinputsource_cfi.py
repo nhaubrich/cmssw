@@ -3,7 +3,20 @@ import FWCore.ParameterSet.Config as cms
 source = cms.Source(
     "PoolSource",
     fileNames = cms.untracked.vstring(
-        #"root://eoscms//store/express/Commissioning2016/ExpressCosmics/FEVT/Express-v1/000/266/681/00000/001AF1D0-6BE9-E511-9A8D-02163E0143FE.root", 
+"/store/express/Run2016B/ExpressPhysics/FEVT/Express-v2/000/274/250/00000/00606170-1927-E611-8C59-02163E01459E.root",
+
+"/store/express/Run2016B/ExpressPhysics/FEVT/Express-v2/000/274/250/00000/F626F77F-2027-E611-A1D1-02163E014437.root",
+"/store/express/Run2016B/ExpressPhysics/FEVT/Express-v2/000/274/250/00000/F62A06C8-0B27-E611-853F-02163E011A89.root",
+"/store/express/Run2016B/ExpressPhysics/FEVT/Express-v2/000/274/250/00000/F6A06E2A-1B27-E611-8F4B-02163E01427F.root",
+"/store/express/Run2016B/ExpressPhysics/FEVT/Express-v2/000/274/250/00000/F6C15C4B-0E27-E611-B088-02163E0118CA.root",
+"/store/express/Run2016B/ExpressPhysics/FEVT/Express-v2/000/274/250/00000/F6C70DA0-1127-E611-881C-02163E0145D3.root"
+ 
+
+
+
+
+
+       #"root://eoscms//store/express/Commissioning2016/ExpressCosmics/FEVT/Express-v1/000/266/681/00000/001AF1D0-6BE9-E511-9A8D-02163E0143FE.root", 
         #"root://eoscms//store/express/Commissioning2016/ExpressCosmics/FEVT/Express-v1/000/266/681/00000/005BCAC3-72E9-E511-B002-02163E014310.root",
         #"root://eoscms//store/express/Commissioning2016/ExpressCosmics/FEVT/Express-v1/000/266/681/00000/00E3C803-BBE9-E511-A99C-02163E01465A.root",
         #"root://eoscms//store/express/Commissioning2016/ExpressCosmics/FEVT/Express-v1/000/266/681/00000/00EFE5C2-6EE9-E511-ABB3-02163E013417.root",
@@ -13,14 +26,14 @@ source = cms.Source(
         #"root://eoscms//store/express/Commissioning2016/ExpressCosmics/FEVT/Express-v1/000/266/681/00000/06077D63-78E9-E511-9D8A-02163E014310.root",
         #"root://eoscms//store/express/Commissioning2016/ExpressCosmics/FEVT/Express-v1/000/266/681/00000/061EFCD5-97E9-E511-8764-02163E0143FE.root",
         #"root://eoscms//store/express/Commissioning2016/ExpressCosmics/FEVT/Express-v1/000/266/681/00000/063C23DD-82E9-E511-9020-02163E011FCE.root",        
-        "file:/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/DQMTest/MinimumBias__RAW__v1__165633__1CC420EE-B686-E011-A788-0030487CD6E8.root",
+#        "file:/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/DQMTest/MinimumBias__RAW__v1__165633__1CC420EE-B686-E011-A788-0030487CD6E8.root",
         #"/store/data/Commissioning2014/Cosmics/RAW//v3/000/224/380/00000/E05943D1-1227-E411-BB8E-02163E00F0C4.root"
         #"/store/data/Commissioning2014/Cosmics/RAW/v3/000/224/380/00000/68FDADE5-1227-E411-8AA6-02163E00A10C.root"
     )
 )
 
 maxEvents = cms.untracked.PSet(
-    input = cms.untracked.int32(-1)
+    input = cms.untracked.int32(5000)
 )
 
 # Parameters for runType

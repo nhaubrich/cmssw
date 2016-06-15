@@ -6,8 +6,8 @@ process = cms.Process("L1TStage2EmulatorDQM")
 # Event Source and Condition
 
 # Live Online DQM in P5
-process.load("DQM.Integration.config.inputsource_cfi")
-process.load("DQM.Integration.config.FrontierCondition_GT_cfi")
+#process.load("DQM.Integration.config.inputsource_cfi")
+#process.load("DQM.Integration.config.FrontierCondition_GT_cfi")
 # Due to the GT override in the above include, we have trouble with
 # conflicting CaloParams from stage1 and stage2.  This workaround
 # can go away once either the es_prefer is removed from DQM or the
@@ -17,8 +17,8 @@ if 'es_prefer_GlobalTag' in process.__dict__:
     process._Process__esprefers.pop('es_prefer_GlobalTag')
 
 # Testing in lxplus
-#process.load("DQM.Integration.config.fileinputsource_cfi")
-#process.load("DQM.Integration.config.FrontierCondition_GT_Offline_cfi") 
+process.load("DQM.Integration.config.fileinputsource_cfi")
+process.load("DQM.Integration.config.FrontierCondition_GT_Offline_cfi") 
 
 # Required to load EcalMappingRecord
 process.load("Configuration.StandardSequences.GeometryRecoDB_cff")
@@ -30,7 +30,7 @@ process.load("DQM.Integration.config.environment_cfi")
 
 process.dqmEnv.subSystemFolder = "L1T2016EMU"
 process.dqmSaver.tag = "L1T2016EMU"
-process.DQMStore.referenceFileName = "/dqmdata/dqm/reference/l1temu_reference.root"
+#process.DQMStore.referenceFileName = "/dqmdata/dqm/reference/l1temu_reference.root"
 
 process.dqmEndPath = cms.EndPath(
     process.dqmEnv *
@@ -69,7 +69,7 @@ process.selfFatEventFilter = cms.EDFilter("HLTL1NumberFilter",
 process.load("DQM.L1TMonitor.L1TStage2Emulator_cff")
 
 process.l1tEmulatorMonitorPath = cms.Path(
-    process.hltFatEventFilter +
+#    process.hltFatEventFilter +
 #    process.selfFatEventFilter +
     process.l1tStage2Unpack  +
     process.Stage2L1HardwareValidation +
@@ -78,15 +78,15 @@ process.l1tEmulatorMonitorPath = cms.Path(
 
 # To get L1 CaloParams
 # TODO: when L1 O2O is finished, this must be removed!
-process.load('L1Trigger.L1TCalorimeter.caloStage2Params_cfi')
+#process.load('L1Trigger.L1TCalorimeter.caloStage2Params_cfi')
 # To get CaloTPGTranscoder
-process.load('SimCalorimetry.HcalTrigPrimProducers.hcaltpdigi_cff')
-process.HcalTPGCoderULUT.LUTGenerationMode = cms.bool(False)
+#process.load('SimCalorimetry.HcalTrigPrimProducers.hcaltpdigi_cff')
+#process.HcalTPGCoderULUT.LUTGenerationMode = cms.bool(False)
 
 # To get L1 uGT parameters:
 # TODO: when L1 O2O is finished, this must be removed!
 #process.load('L1Trigger.L1TGlobal.hackConditions_cff')
-process.load('L1Trigger.L1TGlobal.GlobalParameters_cff')
+#process.load('L1Trigger.L1TGlobal.GlobalParameters_cff')
 
 #--------------------------------------------------
 # TODO: Stage2 Emulator Quality Tests
@@ -99,7 +99,7 @@ process.l1tStage2EmulatorMonitorClientPath = cms.Path(process.l1tStage2EmulatorM
 process.schedule = cms.Schedule( 
     process.rawToDigiPath,
     process.l1tEmulatorMonitorPath,
-    process.l1tStage2EmulatorMonitorClientPath,
+#    process.l1tStage2EmulatorMonitorClientPath,
     process.dqmEndPath
 )
 
