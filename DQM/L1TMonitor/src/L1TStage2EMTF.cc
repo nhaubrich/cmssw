@@ -121,9 +121,12 @@ void L1TStage2EMTF::bookHistograms(DQMStore::IBooker& ibooker, const edm::Run&, 
     emtfTrackBX->setBinLabel(12 - i, std::to_string(6 - i) + " (+)", 1);
   }
   emtfTrackBX->setAxisTitle("Track BX", 2);
+  emtfTrackBX1D = ibooker.book1D("emtfTrackBX1D", "EMTF Track BX", 8, -3, 5);
+  emtfTrackBX->setAxisTitle("Track BX", 1);
   for (int bin = 1, i = -3; bin <= 8; ++bin, ++i) {
-    emtfTrackBX->setBinLabel(bin, std::to_string(i), 2);
+    emtfTrackBX->setBinLabel(bin, std::to_string(i), 2); 
   }
+
 
   emtfTrackPt = ibooker.book1D("emtfTrackPt", "EMTF Track p_{T}", 256, 1, 257);
   emtfTrackPt->setAxisTitle("Track p_{T} [GeV]", 1);
@@ -285,9 +288,11 @@ void L1TStage2EMTF::analyze(const edm::Event& e, const edm::EventSetup& c) {
     float phi_glob_rad = Track->Phi_glob_rad();
     int mode = Track->Mode();
     int quality = Track->Quality();
+    int BX = Track->BX();
 
     emtfTracknHits->Fill(Track->NumHits());
-    emtfTrackBX->Fill(endcap * (sector - 0.5), Track->BX());
+    emtfTrackBX->Fill(endcap * (sector - 0.5), BX);
+    emtfTrackBX1D->Fill(BX);
     emtfTrackPt->Fill(Track->Pt());
     emtfTrackEta->Fill(eta);
     emtfTrackPhi->Fill(phi_glob_rad);

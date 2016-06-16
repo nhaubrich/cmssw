@@ -39,8 +39,6 @@ class L1TdeStage2EMTF : public DQMEDAnalyzer {
 
   std::string monitorDir;
   bool verbose;
-  int emulphi[21] = {0};
-  int dataphi[21] = {0};
   int dataTracks = 0;
   int emulTracks = 0;
 
@@ -74,7 +72,6 @@ class L1TdeStage2EMTF : public DQMEDAnalyzer {
   MonitorElement* emtfEmulPt;
   MonitorElement* emtfEmulMode;
   MonitorElement* emtfEmulQuality;
-  MonitorElement* emtfRatioPhi;
   MonitorElement* emtfMatchEta;
   MonitorElement* emtfMatchPhi;
   MonitorElement* emtfMatchPt;

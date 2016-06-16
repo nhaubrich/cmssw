@@ -129,9 +129,6 @@ void L1TdeStage2EMTF::bookHistograms(DQMStore::IBooker& ibooker, const edm::Run&
   emtfEmulQuality = ibooker.book1D("emtfEmulQuality", "EMTF Track Emul Quality", 16, 0, 16);
   emtfEmulQuality->setAxisTitle("Track Quality",1);
 
-  emtfRatioPhi = ibooker.book1D("emtfRatioPhi","EMTF Track #phi Data/Emulator", 21, -3.15, 3.15);
-  emtfRatioPhi->setAxisTitle("Phi", 1);
-
   emtfMatchWire = ibooker.book2D("emtfMatchWire","EMTF Match Wire", 128,0,128, 128, 0, 128);
   emtfMatchWire->setAxisTitle("Data Wire", 1);
   emtfMatchWire->setAxisTitle("Emul Wire", 2);
@@ -274,12 +271,6 @@ void L1TdeStage2EMTF::analyze(const edm::Event& e, const edm::EventSetup& c) {
     emtfDataQuality->Fill(quality);
 
     emtfCollectionSizes->Fill(2);
-    //Weird rounding for emtfRatioPhi plot (data/emul)
-    int phiBin = floor((phi_glob_rad*20.0/6.3)+10.5);
-    dataphi[phiBin]++;
-    if(emulphi[phiBin]>0){
-       emtfRatioPhi->setBinContent(phiBin+1,(float) dataphi[phiBin]/ (float)emulphi[phiBin]);
-    }
   }
   //std::cout << "Emul Tracks" << endl;
   //emul Tracks
@@ -300,10 +291,6 @@ void L1TdeStage2EMTF::analyze(const edm::Event& e, const edm::EventSetup& c) {
     emtfEmulMode->Fill(mode);
     emtfEmulQuality->Fill(quality);
     emtfCollectionSizes->Fill(3);
-
-    //increment pseudobin for phi ratio plot
-    int phibin = floor((phi_glob_rad*20/6.3)+10.5);
-    emulphi[phibin]++;
   }
     
   //Best Match Hit plots

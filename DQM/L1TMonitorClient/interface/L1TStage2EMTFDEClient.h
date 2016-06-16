@@ -28,6 +28,19 @@ class L1TStage2EMTFDEClient: public DQMEDHarvester {
   std::string input_dir_emul_;
   
   MonitorElement* emtfMuonhwEtaComp_;
+  MonitorElement* emtfMuonhwPhiComp_;
+  MonitorElement* emtfMuonhwPtComp_;
+  MonitorElement* emtfMuonhwQualComp_;
+  MonitorElement* emtfMuonhwBXComp_;
+
+  MonitorElement* emtfTrackEtaComp_;
+  MonitorElement* emtfTrackPhiComp_;
+  MonitorElement* emtfTrackPtComp_;
+  MonitorElement* emtfTrackQualComp_;
+  MonitorElement* emtfTrackModeComp_;
+  MonitorElement* emtfTrackBXComp_;
+
+
 };
 
 #endif
