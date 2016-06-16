@@ -89,7 +89,7 @@ from DQM.L1TMonitor.L1TStage2CaloLayer2_cfi import *
 from DQM.L1TMonitor.L1TStage2CaloLayer2Emul_cfi import *
 
 # EMTF
-from DQM.L1TMonitor.L1TStage2EMTF_cfi import *
+from DQM.L1TMonitor.L1TStage2EMTFData_cfi import *
 from DQM.L1TMonitor.L1TStage2EMTFEmul_cfi import *
 from DQM.L1TMonitor.L1TdeStage2EMTF_cfi import *
 
@@ -104,6 +104,6 @@ l1tStage2EmulatorOnlineDQM = cms.Sequence(
     # We process both layer2 and layer2emu in same sourceclient
     # to be able to divide them in the MonitorClient
     #l1tStage2CaloLayer2 + l1tStage2CaloLayer2Emul +
-    l1tStage2Emtf + l1tStage2EmtfEmul + l1tdeStage2Emtf #run original DQM on data, on emulator, then run data-emulator comparison DQM
+    l1tStage2EmtfData + l1tStage2EmtfEmul + l1tdeStage2Emtf #run original DQM on data, on emulator, then run data-emulator comparison DQM
     #l1tStage2uGtEmul
 )

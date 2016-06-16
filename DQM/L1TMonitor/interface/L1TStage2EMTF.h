@@ -36,6 +36,7 @@ class L1TStage2EMTF : public DQMEDAnalyzer {
   edm::EDGetTokenT<l1t::RegionalMuonCandBxCollection> muonToken;
   std::string monitorDir;
   bool isData;
+  bool filterBX;
   bool verbose;
 
   MonitorElement* emtfErrors;

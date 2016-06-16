@@ -11,6 +11,7 @@ L1TStage2EMTF::L1TStage2EMTF(const edm::ParameterSet& ps)
       muonToken(consumes<l1t::RegionalMuonCandBxCollection>(ps.getParameter<edm::InputTag>("emtfSource"))),
       monitorDir(ps.getUntrackedParameter<std::string>("monitorDir", "")),
       isData(ps.getUntrackedParameter<bool>("isData", false)),
+      filterBX(ps.getUntrackedParameter<bool>("filterBX", false)),
       verbose(ps.getUntrackedParameter<bool>("verbose", false)) {}
 
 L1TStage2EMTF::~L1TStage2EMTF() {}
@@ -212,6 +213,7 @@ void L1TStage2EMTF::analyze(const edm::Event& e, const edm::EventSetup& c) {
   e.getByToken(hitToken, HitCollection);
 
   for (std::vector<l1t::EMTFHit>::const_iterator Hit = HitCollection->begin(); Hit != HitCollection->end(); ++Hit) {
+    if (filterBX && (Hit->BX() > 1 || Hit->BX() < -1)) continue;//restricts BX to -1,0,1 for emulator comparisons, filterBX only true when emulator is run
     int endcap = Hit->Endcap();
     int sector = Hit->Sector();
     int station = Hit->Station();
@@ -281,7 +283,8 @@ void L1TStage2EMTF::analyze(const edm::Event& e, const edm::EventSetup& c) {
     emtfnTracks->Fill(10);
   }
 
-  for (std::vector<l1t::EMTFTrack>::const_iterator Track = TrackCollection->begin(); Track != TrackCollection->end(); ++Track) {
+  for (std::vector<l1t::EMTFTrack>::const_iterator Track = TrackCollection->begin(); Track != TrackCollection->end(); ++Track) { 
+    if ( filterBX && (Track->BX() > 1 || Track->BX() < -1)) continue;
     int endcap = Track->Endcap();
     int sector = Track->Sector();
     float eta = Track->Eta();
@@ -308,6 +311,7 @@ void L1TStage2EMTF::analyze(const edm::Event& e, const edm::EventSetup& c) {
   e.getByToken(muonToken, MuonBxCollection);
 
   for (int itBX = MuonBxCollection->getFirstBX(); itBX <= MuonBxCollection->getLastBX(); ++itBX) {
+    if (filterBX && (itBX > 1 || itBX < -1)) continue;
     for (l1t::RegionalMuonCandBxCollection::const_iterator Muon = MuonBxCollection->begin(itBX); Muon != MuonBxCollection->end(itBX); ++Muon) {
       emtfMuonBX->Fill(itBX);
       emtfMuonhwPt->Fill(Muon->hwPt());
