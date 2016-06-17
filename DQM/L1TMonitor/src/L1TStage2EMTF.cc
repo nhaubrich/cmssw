@@ -145,6 +145,8 @@ void L1TStage2EMTF::bookHistograms(DQMStore::IBooker& ibooker, const edm::Run&, 
   emtfTrackOccupancy->setAxisTitle("#eta", 1);
   emtfTrackOccupancy->setAxisTitle("#phi", 2);
 
+  emtfTrackSectorIndex = ibooker.book1D("emtfTrackSectorIndex", "EMTF Track Sector Index", 13, -6.5, 6.5);
+
   emtfTrackMode = ibooker.book1D("emtfTrackMode", "EMTF Track Mode", 16, 0, 16);
   emtfTrackMode->setAxisTitle("Mode", 1);
 
@@ -303,6 +305,7 @@ void L1TStage2EMTF::analyze(const edm::Event& e, const edm::EventSetup& c) {
     emtfTrackMode->Fill(mode);
     emtfTrackQuality->Fill(quality);
     emtfTrackQualityVsMode->Fill(mode, quality);
+    emtfTrackSectorIndex->Fill(endcap*sector);
     if (mode == 15) emtfTrackPhiHighQuality->Fill(phi_glob_rad);
    }
 

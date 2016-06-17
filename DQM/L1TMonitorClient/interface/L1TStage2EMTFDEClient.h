@@ -33,12 +33,29 @@ class L1TStage2EMTFDEClient: public DQMEDHarvester {
   MonitorElement* emtfMuonhwQualComp_;
   MonitorElement* emtfMuonhwBXComp_;
 
+  MonitorElement* emtfMuonhwEtaDif_;
+  MonitorElement* emtfMuonhwPhiDif_;
+  MonitorElement* emtfMuonhwPtDif_;
+  MonitorElement* emtfMuonhwQualDif_;
+  MonitorElement* emtfMuonhwBXDif_;
+
+
   MonitorElement* emtfTrackEtaComp_;
   MonitorElement* emtfTrackPhiComp_;
   MonitorElement* emtfTrackPtComp_;
   MonitorElement* emtfTrackQualComp_;
   MonitorElement* emtfTrackModeComp_;
   MonitorElement* emtfTrackBXComp_;
+  MonitorElement* emtfTrackSectorIndexComp_;
+
+  MonitorElement* emtfTrackEtaDif_;
+  MonitorElement* emtfTrackPhiDif_;
+  MonitorElement* emtfTrackPtDif_;
+  MonitorElement* emtfTrackQualDif_;
+  MonitorElement* emtfTrackModeDif_;
+  MonitorElement* emtfTrackBXDif_;
+  MonitorElement* emtfTrackSectorIndexDif_;
+ 
 
 
 };

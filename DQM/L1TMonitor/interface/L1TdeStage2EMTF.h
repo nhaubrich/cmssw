@@ -44,16 +44,6 @@ class L1TdeStage2EMTF : public DQMEDAnalyzer {
 
   MonitorElement* emtfComparenMuonsEvent;
 //RegionalMuonCand Elements
-  MonitorElement* emtfDataBX;
-  MonitorElement* emtfEmulBX;
-  MonitorElement* emtfDatahwPt;
-  MonitorElement* emtfEmulhwPt;
-  MonitorElement* emtfDatahwEta;
-  MonitorElement* emtfEmulhwEta;
-  MonitorElement* emtfDatahwPhi;
-  MonitorElement* emtfEmulhwPhi;
-  MonitorElement* emtfDatahwQual;
-  MonitorElement* emtfEmulhwQual;
 
   /*MonitorElement* emtfComparehwPt;
   MonitorElement* emtfComparehwEta;
@@ -61,21 +51,12 @@ class L1TdeStage2EMTF : public DQMEDAnalyzer {
   MonitorElement* emtfComparehwQual;*/
 
   //Track Elements
-  MonitorElement* emtfDataEta;
-  MonitorElement* emtfDataPhi;
-  MonitorElement* emtfDataPt;
-  MonitorElement* emtfDataMode;
-  MonitorElement* emtfDataQuality;
-
-  MonitorElement* emtfEmulEta;
-  MonitorElement* emtfEmulPhi;
-  MonitorElement* emtfEmulPt;
-  MonitorElement* emtfEmulMode;
-  MonitorElement* emtfEmulQuality;
-  MonitorElement* emtfMatchEta;
+ MonitorElement* emtfMatchEta;
   MonitorElement* emtfMatchPhi;
   MonitorElement* emtfMatchPt;
   MonitorElement* emtfMatchTrackBx;
+  MonitorElement* emtfMatchQuality;
+  MonitorElement* emtfMatchMode;
 
   //Hit Elements
   MonitorElement* emtfMatchWire;
