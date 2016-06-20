@@ -135,10 +135,10 @@ void L1TStage2EMTF::bookHistograms(DQMStore::IBooker& ibooker, const edm::Run&, 
   emtfTrackEta = ibooker.book1D("emtfTrackEta", "EMTF Track #eta", 100, -2.5, 2.5);
   emtfTrackEta->setAxisTitle("Track #eta", 1);
 
-  emtfTrackPhi = ibooker.book1D("emtfTrackPhi", "EMTF Track #phi", 126, -3.15, 3.15);
+  emtfTrackPhi = ibooker.book1D("emtfTrackPhi", "EMTF Track #phi", 128, -3.2, 3.2);
   emtfTrackPhi->setAxisTitle("Track #phi", 1);
 
-  emtfTrackPhiHighQuality = ibooker.book1D("emtfTrackPhiHighQuality", "EMTF High Quality #phi", 126, -3.15, 3.15);
+  emtfTrackPhiHighQuality = ibooker.book1D("emtfTrackPhiHighQuality", "EMTF High Quality #phi", 128, -3.2, 3.2);
   emtfTrackPhiHighQuality->setAxisTitle("Track #phi (High Quality)", 1);
 
   emtfTrackOccupancy = ibooker.book2D("emtfTrackOccupancy", "EMTF Track Occupancy", 100, -2.5, 2.5, 126, -3.15, 3.15);

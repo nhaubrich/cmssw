@@ -59,13 +59,6 @@ class L1TdeStage2EMTF : public DQMEDAnalyzer {
   MonitorElement* emtfMatchMode;
 
   //Hit Elements
-  MonitorElement* emtfMatchWire;
-  MonitorElement* emtfMatchStrip;
-  MonitorElement* emtfDataHitBx;
-  MonitorElement* emtfEmulHitBx;
-  MonitorElement* emtfDifWire;
-  MonitorElement* emtfDifStrip;
-  MonitorElement* emtfMatchHitBx;
   MonitorElement* emtfCollectionSizes;
   
 };

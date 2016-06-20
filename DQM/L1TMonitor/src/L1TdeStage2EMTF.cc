@@ -33,45 +33,7 @@ void L1TdeStage2EMTF::bookHistograms(DQMStore::IBooker& ibooker, const edm::Run&
       emtfComparenMuonsEvent->setBinLabel(bin, binLabel, axis);
     }
   }
-  // Comparison plots reserved for updated emulator.
-  /*emtfComparehwPt = ibooker.book2D("emtfComparehwPt", "EMTF Muon Cand p_{T}", 512, 0, 512, 512, 0, 512);
-  emtfComparehwPt->setAxisTitle("Hardware p_{T}", 1);
-  emtfComparehwPt->setAxisTitle("Emulator Hardware p_{T}", 2);
-
-  emtfComparehwEta = ibooker.book2D("emtfComparehwEta", "EMTF Muon Cand #eta", 460, -230, 230, 460, -230, 230);
-  emtfComparehwEta->setAxisTitle("Hardware #eta", 1);
-  emtfComparehwEta->setAxisTitle("Emulator Hardware #eta", 2);
-
-  emtfComparehwPhi = ibooker.book2D("emtfComparehwPhi", "EMTF Muon Cand #phi", 125, -20, 105, 125, -20, 105);
-  emtfComparehwPhi->setAxisTitle("Hardware #phi", 1);
-  emtfComparehwPhi->setAxisTitle("Emulator Hardware #phi", 2);
-
-  emtfComparehwQual = ibooker.book2D("emtfComparehwQual", "EMTF Muon Cand Quality", 16, 0, 16, 16, 0, 16);
-  for (int axis = 1; axis <= 2; ++axis) {
-    std::string axisTitle = (axis == 1) ? "Quality" : "Emulator Quality";
-    emtfComparehwQual->setAxisTitle(axisTitle, axis);
-    for (int bin = 1; bin <= 16; ++bin) {
-      emtfComparehwQual->setBinLabel(bin, std::to_string(bin - 1), axis);
-    }
-  }*/
-  emtfMatchWire = ibooker.book2D("emtfMatchWire","EMTF Match Wire", 128,0,128, 128, 0, 128);
-  emtfMatchWire->setAxisTitle("Data Wire", 1);
-  emtfMatchWire->setAxisTitle("Emul Wire", 2);
-
-  emtfMatchStrip = ibooker.book2D("emtfMatchStrip","EMTF Match Strip", 256, 0, 256, 256, 0, 256);
-  emtfMatchStrip->setAxisTitle("Data Strip", 1);
-  emtfMatchStrip->setAxisTitle("Emul Strip", 2);
-
-  emtfMatchHitBx = ibooker.book2D("emtfMatchHitBx","EMTF Match Hit Bx", 9, -4, 4, 9, -4 ,4);
-  emtfMatchHitBx->setAxisTitle("Data Hit Bx", 1);
-  emtfMatchHitBx->setAxisTitle("Emul Hit Bx", 2);
-
-  emtfDataHitBx = ibooker.book1D("emtfDataHitBx","EMTF Data Hit Bx", 8, -4,4);
-  emtfDataHitBx->setAxisTitle("BX Timing",1);
-
-  emtfEmulHitBx = ibooker.book1D("emtfEmulHitBx","EMTF Emul Hit Bx", 8, -4,4);
-  emtfEmulHitBx->setAxisTitle("BX Timing",1);
-
+ 
   emtfMatchEta = ibooker.book2D("emtfMatchEta","EMTF Match #eta", 100, -2.5, 2.5, 100, -2.5, 2.5);
   emtfMatchEta->setAxisTitle("Data #eta",1);
   emtfMatchEta->setAxisTitle("Emul #eta", 2);
@@ -101,15 +63,6 @@ void L1TdeStage2EMTF::bookHistograms(DQMStore::IBooker& ibooker, const edm::Run&
     emtfMatchQuality->setBinLabel(bin, std::to_string(bin - 1), 2);
     emtfMatchMode->setBinLabel(bin, std::to_string(bin - 1), 2);
   }
-
-
-  emtfDifWire = ibooker.book1D("emtfDifWire", "EMTF Dif Wire", 127, 1, 128);
-  emtfDifWire->setAxisTitle("Wire",1);
-  emtfDifWire->setAxisTitle("Positive=data",2);
-
-  emtfDifStrip = ibooker.book1D("emtfDifStrip", "EMTF Dif Strip", 255, 1, 256);
-  emtfDifStrip->setAxisTitle("Wire",1);
-  emtfDifStrip->setAxisTitle("Positive=data",2);
 
   emtfCollectionSizes = ibooker.book1D("emtfCollectionSizes","EMTF CollectionSizes", 6,0,6);
   emtfCollectionSizes->setBinLabel(1,"Data Hits",1);

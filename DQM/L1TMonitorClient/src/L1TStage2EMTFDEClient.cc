@@ -138,7 +138,6 @@ void L1TStage2EMTFDEClient::processHistograms(DQMStore::IGetter &igetter){
     TH1F *hwBXDif = emtfMuonhwBXDif_->getTH1F();
 
     hwBXDif->Add(hwBXD,hwBXE);
-    //hwBXE->Add(hwBXD);
     hwBXRatio->Divide(hwBXD, hwBXE);
     hwBXDif->Add(hwBXD, hwBXE, 1, -1);
   }
