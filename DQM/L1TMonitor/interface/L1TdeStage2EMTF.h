@@ -43,15 +43,9 @@ class L1TdeStage2EMTF : public DQMEDAnalyzer {
   int emulTracks = 0;
 
   MonitorElement* emtfComparenMuonsEvent;
-//RegionalMuonCand Elements
-
-  /*MonitorElement* emtfComparehwPt;
-  MonitorElement* emtfComparehwEta;
-  MonitorElement* emtfComparehwPhi;
-  MonitorElement* emtfComparehwQual;*/
 
   //Track Elements
- MonitorElement* emtfMatchEta;
+  MonitorElement* emtfMatchEta;
   MonitorElement* emtfMatchPhi;
   MonitorElement* emtfMatchPt;
   MonitorElement* emtfMatchTrackBx;

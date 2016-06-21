@@ -34,16 +34,19 @@ void L1TStage2EMTFDEClient::book(DQMStore::IBooker &ibooker){
 
   //Track Ratio Plots
   emtfTrackEtaComp_=ibooker.book1D("emtfTrackEtaComp", "Data/Emul of Track Eta",100,-2.5,2.5);
-  emtfTrackPhiComp_=ibooker.book1D("emtfTrackPhiComp", "Data/Emul of Track Phi", 126, -3.15, 3.15);
+  emtfTrackPhiComp_=ibooker.book1D("emtfTrackPhiComp", "Data/Emul of Track Phi", 128, -3.2, 3.2);
   emtfTrackPtComp_=ibooker.book1D("emtfTrackPtComp", "Data/Emul of Track p_{T}", 256, 1, 257);
   emtfTrackQualComp_=ibooker.book1D("emtfTrackQualComp", "Data/Emul of Track Quality", 16, 0, 16);
   emtfTrackModeComp_=ibooker.book1D("emtfTrackModeComp", "Data/Emul of Track Mode", 16, 0, 16);
   emtfTrackBXComp_=ibooker.book1D("emtfTrackBXComp", "Data/Emul of Track BX", 8, -3, 5);
-  emtfTrackSectorIndexComp_=ibooker.book1D("emtfTrackSectorIndexComp","Data/Emul of Track Sector Index", 13, -6.5, 6.5);
+  for (int bin = 1, bin_label = -3; bin <= 8; ++bin, ++bin_label) {
+    emtfTrackBXComp_->setBinLabel(bin, std::to_string(bin_label), 1);
+  }
+emtfTrackSectorIndexComp_=ibooker.book1D("emtfTrackSectorIndexComp","Data/Emul of Track Sector Index", 13, -6.5, 6.5);
 
 
   emtfTrackEtaDif_=ibooker.book1D("emtfTrackEtaDif", "Data - Emul of Track Eta",100, -2.5, 2.5);
-  emtfTrackPhiDif_=ibooker.book1D("emtfTrackPhiDif", "Data - Emul of Track Phi", 126, -3.15, 3.15);
+  emtfTrackPhiDif_=ibooker.book1D("emtfTrackPhiDif", "Data - Emul of Track Phi", 128, -3.2, 3.2);
   emtfTrackPtDif_=ibooker.book1D("emtfTrackPtDif", "Data - Emul of Track Pt", 256, 1, 257);
   emtfTrackQualDif_=ibooker.book1D("emtfTrackQualDif", "Data - Emul of Track Qual", 16, 0, 16);
   emtfTrackModeDif_=ibooker.book1D("emtfTrackModeDif", "Data - Emul of Track Mode", 16, 0, 16);

@@ -101,48 +101,7 @@ void L1TdeStage2EMTF::analyze(const edm::Event& e, const edm::EventSetup& c) {
     edm::Handle<l1t::EMTFTrackCollection> emulTrackCollection;
   e.getByToken(emultrackToken, emulTrackCollection);
 
-  /* 
-  //Best Match Hit plots
-  int minWireDif = 999;
-  int dataWire = -99;
-  int emulWire = -99;
-
-  int minStripDif = 999;
-  int dataStrip = -99;
-  int emulStrip = -99;
-
-  int minHitBxDif = 999;
-  int dataHitBx = -99;
-  int emulHitBx = -99;
-
-  for (std::vector<l1t::EMTFHit>::const_iterator Hit = dataHitCollection->begin(); Hit != dataHitCollection->end(); ++Hit){
-    for(std::vector<l1t::EMTFHit>::const_iterator emulHit = emulHitCollection->begin(); emulHit != emulHitCollection->end(); ++emulHit){
-      if(abs((Hit->Wire() - emulHit->Wire())) < minWireDif){
-        minWireDif = abs((Hit->Wire() - emulHit->Wire()));
-        dataWire = Hit->Wire();
-        emulWire = emulHit->Wire();
-      }
-
-      if(abs((Hit->Strip() - emulHit->Strip())) < minStripDif){
-        minStripDif = abs((Hit->Strip() - emulHit->Strip()));
-        dataStrip = Hit->Strip();
-        emulStrip = emulHit->Strip();
-      }
-      if(abs((Hit->BX() - emulHit->BX())) < minHitBxDif){
-        minHitBxDif = abs((Hit->BX() - emulHit->BX()));
-        dataHitBx = Hit->BX();
-        emulHitBx = emulHit->BX();
-      }
-    }
-  }
-
-  emtfMatchWire->Fill(dataWire, emulWire);
-  emtfDifWire->Fill(dataWire - emulWire);
-  emtfMatchStrip->Fill(dataStrip, emulStrip);
-  emtfDifStrip->Fill(dataStrip - emulStrip);
-  emtfMatchHitBx->Fill(dataHitBx, emulHitBx);
-  */
-  //Best Match Track plots
+    //Best Match Track plots
 
   float mindR = 999;
 
