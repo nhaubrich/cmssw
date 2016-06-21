@@ -30,7 +30,7 @@ l1tStage2Unpack = cms.Sequence(
     caloStage2Digis +
     BMTFStage2Digis +
     #omtfStage2Digis +
-    emtfStage2Digis 
+    emtfStage2Digis +
     gmtStage2Digis +
     gtStage2Digis
 )
@@ -74,7 +74,7 @@ valGtStage2Digis.AlgorithmTriggersUnprescaled = cms.bool(False)
 Stage2L1HardwareValidation = cms.Sequence(
     valCaloStage2Layer1Digis +
     valCaloStage2Layer2Digis +
-    valEmtfStage2Digis 
+    valEmtfStage2Digis +
     valGtStage2Digis
 )
 
