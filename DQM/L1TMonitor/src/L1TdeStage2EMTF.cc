@@ -64,13 +64,13 @@ void L1TdeStage2EMTF::bookHistograms(DQMStore::IBooker& ibooker, const edm::Run&
     emtfMatchMode->setBinLabel(bin, std::to_string(bin - 1), 2);
   }
 
-  emtfCollectionSizes = ibooker.book1D("emtfCollectionSizes","EMTF CollectionSizes", 6,0,6);
-  emtfCollectionSizes->setBinLabel(1,"Data Hits",1);
-  emtfCollectionSizes->setBinLabel(2,"Emul Hits",1);
-  emtfCollectionSizes->setBinLabel(3,"Data Tracks",1);
-  emtfCollectionSizes->setBinLabel(4,"Emul Tracks",1);
-  emtfCollectionSizes->setBinLabel(5,"Data Output" ,1);
-  emtfCollectionSizes->setBinLabel(6,"Emul output", 1);
+  emtfCollectionSizes = ibooker.book1D("emtfCollectionSizes","EMTF CollectionSizes", 2,0,2);
+//  emtfCollectionSizes->setBinLabel(1,"Data Hits",1);
+//  emtfCollectionSizes->setBinLabel(2,"Emul Hits",1);
+  emtfCollectionSizes->setBinLabel(1,"Data Tracks",1);
+  emtfCollectionSizes->setBinLabel(2,"Emul Tracks",1);
+//  emtfCollectionSizes->setBinLabel(5,"Data Output" ,1);
+//  emtfCollectionSizes->setBinLabel(6,"Emul output", 1);
 }
 
 void L1TdeStage2EMTF::analyze(const edm::Event& e, const edm::EventSetup& c) {
@@ -111,10 +111,10 @@ void L1TdeStage2EMTF::analyze(const edm::Event& e, const edm::EventSetup& c) {
   //Find the pair of data/emulator tracks that minimizes d(phi)^2 + d(eta)^2 
   for (std::vector<l1t::EMTFTrack>::const_iterator dataTrack = dataTrackCollection->begin(); dataTrack != dataTrackCollection->end(); ++dataTrack){
     if (dataTrack->BX() > 1 || dataTrack->BX() < -1) continue;
-    emtfCollectionSizes->Fill(2); 
+    emtfCollectionSizes->Fill(1); 
     for (std::vector<l1t::EMTFTrack>::const_iterator emulTrack = emulTrackCollection->begin(); emulTrack !=emulTrackCollection->end(); ++emulTrack){
       if (emulTrack->BX() > 1 || emulTrack->BX() < -1) continue;
-      emtfCollectionSizes->Fill(3);
+      emtfCollectionSizes->Fill(2);
       float dPhi = dataTrack->Phi_glob_rad() - emulTrack->Phi_glob_rad();
       if (dPhi > 3.14159) dPhi -= 3.14159;//ensure dPhi falls between -pi and +pi
       if (dPhi < -3.14159) dPhi += 3.14159;
