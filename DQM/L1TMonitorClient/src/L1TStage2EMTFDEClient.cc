@@ -1,5 +1,5 @@
 #include "DQM/L1TMonitorClient/interface/L1TStage2EMTFDEClient.h"
-
+#include <iostream>
 L1TStage2EMTFDEClient::L1TStage2EMTFDEClient(const edm::ParameterSet& ps):
   monitor_dir_(ps.getUntrackedParameter<std::string>("monitorDir","")),
   input_dir_data_(ps.getUntrackedParameter<std::string>("inputDataDir","")),
@@ -22,16 +22,22 @@ void L1TStage2EMTFDEClient::book(DQMStore::IBooker &ibooker){
   emtfMuonhwPtComp_=ibooker.book1D("emtfMuonhwPtComp", "Data/Emul of Output p_{T}", 512, 0, 512);
   emtfMuonhwQualComp_=ibooker.book1D("emtfMuonhwQualComp", "Data/Emul of Output Quality", 16, 0, 16);
   emtfMuonhwBXComp_=ibooker.book1D("emtfMuonhwBXComp", "Data/Emul of Output BX", 7, -3, 4); 
-  for (int bin = 1, bin_label = -3; bin <= 7; ++bin, ++bin_label) {
-    emtfMuonhwBXComp_->setBinLabel(bin, std::to_string(bin_label), 1);
-  }
+
+
 
   emtfMuonhwEtaDif_ = ibooker.book1D("emtfMuonhwEtaDif", "Data - Emul of Output Eta", 460, -230, 230);
   emtfMuonhwPhiDif_ = ibooker.book1D("emtfMuonhwPhiDif", "Data - Emul of Output Phi", 125, -20, 105);
   emtfMuonhwPtDif_ = ibooker.book1D("emtfMuonhwPtDif", "Data - Emul of Output Pt", 512, 0, 512);
   emtfMuonhwQualDif_ = ibooker.book1D("emtfMuonhwQualDif", "Data - Emul of Output Quality", 16, 0, 16);
   emtfMuonhwBXDif_ = ibooker.book1D("emtfMuonhwBXDif", "Data - Emul of Output BX", 7, -3, 4);
-
+  for (int bin = 1; bin <= 16; ++bin) {
+    emtfMuonhwQualComp_->setBinLabel(bin, std::to_string(bin - 1), 1);
+    emtfMuonhwQualDif_->setBinLabel(bin, std::to_string(bin - 1), 1);
+  }
+  for (int bin = 1, bin_label = -3; bin <= 7; ++bin, ++bin_label) {
+    emtfMuonhwBXComp_->setBinLabel(bin, std::to_string(bin_label), 1);
+    emtfMuonhwBXDif_->setBinLabel(bin, std::to_string(bin_label), 1);
+  }
   //Track Ratio Plots
   emtfTrackEtaComp_=ibooker.book1D("emtfTrackEtaComp", "Data/Emul of Track Eta",100,-2.5,2.5);
   emtfTrackPhiComp_=ibooker.book1D("emtfTrackPhiComp", "Data/Emul of Track Phi", 128, -3.2, 3.2);
@@ -52,7 +58,13 @@ emtfTrackSectorIndexComp_=ibooker.book1D("emtfTrackSectorIndexComp","Data/Emul o
   emtfTrackModeDif_=ibooker.book1D("emtfTrackModeDif", "Data - Emul of Track Mode", 16, 0, 16);
   emtfTrackBXDif_=ibooker.book1D("emtfTrackBXDif", "Data - Emul of Track BX", 8, -3, 5);
   emtfTrackSectorIndexDif_=ibooker.book1D("emtfTrackSectorIndexDif", "Data - Emul of Track Sector Index", 13, -6.5, 6.5);
-}
+  for (int bin = 1; bin <= 16; ++bin) {
+    emtfTrackModeComp_->setBinLabel(bin, std::to_string(bin - 1), 1);
+    emtfTrackModeDif_->setBinLabel(bin, std::to_string(bin - 1), 1);
+    emtfTrackQualComp_->setBinLabel(bin, std::to_string(bin - 1), 1);
+    emtfTrackQualDif_->setBinLabel(bin, std::to_string(bin - 1), 1);
+  }
+} 
 
 void L1TStage2EMTFDEClient::processHistograms(DQMStore::IGetter &igetter){
   
@@ -74,7 +86,7 @@ void L1TStage2EMTFDEClient::processHistograms(DQMStore::IGetter &igetter){
 
     hwEtaDif->Add(hwEtaD, hwEtaE);
 
-    hwEtaRatio->Divide(hwEtaD, hwEtaE, 2, 1);
+    hwEtaRatio->Divide(hwEtaD, hwEtaDif, 2, 1);
  
     hwEtaDif->Add(hwEtaD, hwEtaE, 1, -1);
 }
@@ -90,10 +102,9 @@ void L1TStage2EMTFDEClient::processHistograms(DQMStore::IGetter &igetter){
 
     TH1F *hwPhiRatio = emtfMuonhwPhiComp_->getTH1F();
     TH1F *hwPhiDif = emtfMuonhwPhiDif_->getTH1F();
-    hwPhiDif->Add(hwPhiD, hwPhiE);
 
-    hwPhiE->Add(hwPhiD); 
-    hwPhiRatio->Divide(hwPhiD, hwPhiE, 2, 1);
+    hwPhiDif->Add(hwPhiD, hwPhiE); 
+    hwPhiRatio->Divide(hwPhiD, hwPhiDif, 2, 1);
     hwPhiDif->Add(hwPhiD, hwPhiE, 1, -1);
  }
 
@@ -110,7 +121,7 @@ void L1TStage2EMTFDEClient::processHistograms(DQMStore::IGetter &igetter){
     TH1F *hwPtDif = emtfMuonhwPtDif_->getTH1F();
     hwPtDif->Add(hwPtD, hwPtE);
 
-    hwPtRatio->Divide(hwPtD, hwPtE, 2, 1);
+    hwPtRatio->Divide(hwPtD, hwPtDif, 2, 1);
     hwPtDif->Add(hwPtD, hwPtE, 1, -1);
  }
   //hwQual
@@ -124,8 +135,9 @@ void L1TStage2EMTFDEClient::processHistograms(DQMStore::IGetter &igetter){
 
     TH1F *hwQualRatio = emtfMuonhwQualComp_->getTH1F();
     TH1F *hwQualDif = emtfMuonhwQualDif_->getTH1F();
+    
     hwQualDif->Add(hwQualD, hwQualE);
-    hwQualRatio->Divide(hwQualD, hwQualE, 2, 1);
+    hwQualRatio->Divide(hwQualD, hwQualDif, 2, 1);
     hwQualDif->Add(hwQualD, hwQualE, 1, -1);
  }
   //hwBX
@@ -141,7 +153,7 @@ void L1TStage2EMTFDEClient::processHistograms(DQMStore::IGetter &igetter){
     TH1F *hwBXDif = emtfMuonhwBXDif_->getTH1F();
 
     hwBXDif->Add(hwBXD,hwBXE);
-    hwBXRatio->Divide(hwBXD, hwBXE);
+    hwBXRatio->Divide(hwBXD, hwBXDif,2,1);
     hwBXDif->Add(hwBXD, hwBXE, 1, -1);
   }
 
@@ -161,7 +173,7 @@ void L1TStage2EMTFDEClient::processHistograms(DQMStore::IGetter &igetter){
 
     EtaDif->Add(EtaD, EtaE);
    
-    EtaRatio->Divide(EtaD, EtaE, 2, 1); 
+    EtaRatio->Divide(EtaD, EtaDif, 2, 1); 
     EtaDif->Add(EtaD, EtaE, 1, -1);
 }
 
@@ -177,7 +189,7 @@ void L1TStage2EMTFDEClient::processHistograms(DQMStore::IGetter &igetter){
     TH1F *PhiDif = emtfTrackPhiDif_->getTH1F();
 
     PhiDif->Add(PhiD, PhiE);
-    PhiRatio->Divide(PhiD, PhiE, 2, 1);
+    PhiRatio->Divide(PhiD, PhiDif, 2, 1);
     PhiDif->Add(PhiD, PhiE, 1, -1);
  }
 
@@ -194,7 +206,7 @@ void L1TStage2EMTFDEClient::processHistograms(DQMStore::IGetter &igetter){
     TH1F *PtDif = emtfTrackPtDif_->getTH1F();
 
     PtDif->Add(PtD, PtE);
-    PtRatio->Divide(PtD, PtE, 2, 1);
+    PtRatio->Divide(PtD, PtDif, 2, 1);
     PtDif->Add(PtD, PtE, 1, -1);
  }
 
@@ -211,7 +223,7 @@ void L1TStage2EMTFDEClient::processHistograms(DQMStore::IGetter &igetter){
     TH1F *ModeDif = emtfTrackModeDif_->getTH1F();
 
     ModeDif->Add(ModeD, ModeE);
-    ModeRatio->Divide(ModeD, ModeE, 2, 1);
+    ModeRatio->Divide(ModeD, ModeDif, 2, 1);
     ModeDif->Add(ModeD, ModeE, 1, -1);
  }
 
@@ -229,7 +241,7 @@ void L1TStage2EMTFDEClient::processHistograms(DQMStore::IGetter &igetter){
 
     QualDif->Add(QualD, QualE);
 
-    QualRatio->Divide(QualD, QualE, 2, 1);
+    QualRatio->Divide(QualD, QualDif, 2, 1);
     QualDif->Add(QualD, QualE, 1, -1);
  }
 
@@ -262,7 +274,7 @@ void L1TStage2EMTFDEClient::processHistograms(DQMStore::IGetter &igetter){
     TH1F *SIDif = emtfTrackSectorIndexDif_->getTH1F();
     
     SIDif->Add(SID, SIE);  
-    SIRatio->Divide(SID, SIE, 2, 1);
+    SIRatio->Divide(SID, SIDif, 2, 1);
     SIDif->Add(SID, SIE, 1, -1);
  }
 

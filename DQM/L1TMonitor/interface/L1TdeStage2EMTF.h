@@ -51,10 +51,7 @@ class L1TdeStage2EMTF : public DQMEDAnalyzer {
   MonitorElement* emtfMatchTrackBx;
   MonitorElement* emtfMatchQuality;
   MonitorElement* emtfMatchMode;
-
-  //Hit Elements
-  MonitorElement* emtfCollectionSizes;
-  
+ 
 };
 
 #endif
