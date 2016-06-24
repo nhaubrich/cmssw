@@ -123,6 +123,7 @@ void L1TStage2EMTF::bookHistograms(DQMStore::IBooker& ibooker, const edm::Run&, 
   }
   emtfTrackBX->setAxisTitle("Track BX", 2);
   emtfTrackBX1D = ibooker.book1D("emtfTrackBX1D", "EMTF Track BX", 8, -3, 5);
+  emtfTrackBX1D->getTH1F()->Sumw2(); 
   emtfTrackBX->setAxisTitle("Track BX", 1);
   for (int bin = 1, i = -3; bin <= 8; ++bin, ++i) {
     emtfTrackBX->setBinLabel(bin, std::to_string(i), 2); 
@@ -131,12 +132,18 @@ void L1TStage2EMTF::bookHistograms(DQMStore::IBooker& ibooker, const edm::Run&, 
 
   emtfTrackPt = ibooker.book1D("emtfTrackPt", "EMTF Track p_{T}", 256, 1, 257);
   emtfTrackPt->setAxisTitle("Track p_{T} [GeV]", 1);
+  emtfTrackPt->getTH1F()->Sumw2();
+
 
   emtfTrackEta = ibooker.book1D("emtfTrackEta", "EMTF Track #eta", 100, -2.5, 2.5);
   emtfTrackEta->setAxisTitle("Track #eta", 1);
+  emtfTrackEta->getTH1F()->Sumw2();
+
 
   emtfTrackPhi = ibooker.book1D("emtfTrackPhi", "EMTF Track #phi", 128, -3.2, 3.2);
   emtfTrackPhi->setAxisTitle("Track #phi", 1);
+  emtfTrackPhi->getTH1F()->Sumw2();
+
 
   emtfTrackPhiHighQuality = ibooker.book1D("emtfTrackPhiHighQuality", "EMTF High Quality #phi", 128, -3.2, 3.2);
   emtfTrackPhiHighQuality->setAxisTitle("Track #phi (High Quality)", 1);
@@ -149,9 +156,13 @@ void L1TStage2EMTF::bookHistograms(DQMStore::IBooker& ibooker, const edm::Run&, 
 
   emtfTrackMode = ibooker.book1D("emtfTrackMode", "EMTF Track Mode", 16, 0, 16);
   emtfTrackMode->setAxisTitle("Mode", 1);
+  emtfTrackMode->getTH1F()->Sumw2();
+
 
   emtfTrackQuality = ibooker.book1D("emtfTrackQuality", "EMTF Track Quality", 16, 0, 16);
   emtfTrackQuality->setAxisTitle("Quality", 1);
+  emtfTrackQuality->getTH1F()->Sumw2();
+
 
   emtfTrackQualityVsMode = ibooker.book2D("emtfTrackQualityVsMode", "EMTF Track Quality vs Mode", 16, 0, 16, 16, 0, 16);
   emtfTrackQualityVsMode->setAxisTitle("Mode", 1);
@@ -175,18 +186,23 @@ void L1TStage2EMTF::bookHistograms(DQMStore::IBooker& ibooker, const edm::Run&, 
 
   emtfMuonhwPt = ibooker.book1D("emtfMuonhwPt", "EMTF Muon Cand p_{T}", 512, 0, 512);
   emtfMuonhwPt->setAxisTitle("Hardware p_{T}", 1);
+  emtfMuonhwPt->getTH1F()->Sumw2();
 
   emtfMuonhwEta = ibooker.book1D("emtfMuonhwEta", "EMTF Muon Cand #eta", 460, -230, 230);
   emtfMuonhwEta->setAxisTitle("Hardware #eta", 1);
+  emtfMuonhwEta->getTH1F()->Sumw2();
 
   emtfMuonhwPhi = ibooker.book1D("emtfMuonhwPhi", "EMTF Muon Cand #phi", 125, -20, 105);
   emtfMuonhwPhi->setAxisTitle("Hardware #phi", 1);
+  emtfMuonhwPhi->getTH1F()->Sumw2();
 
   emtfMuonhwQual = ibooker.book1D("emtfMuonhwQual", "EMTF Muon Cand Quality", 16, 0, 16);
   emtfMuonhwQual->setAxisTitle("Quality", 1);
   for (int bin = 1; bin <= 16; ++bin) {
     emtfMuonhwQual->setBinLabel(bin, std::to_string(bin - 1), 1);
   }
+  emtfMuonhwQual->getTH1F()->Sumw2();
+
 }
 
 void L1TStage2EMTF::analyze(const edm::Event& e, const edm::EventSetup& c) {

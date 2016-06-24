@@ -17,11 +17,11 @@ class L1TStage2EMTFDEClient: public DQMEDHarvester {
   
   virtual void dqmEndJob(DQMStore::IBooker &ibooker, DQMStore::IGetter &igetter)override;
   virtual void dqmEndLuminosityBlock(DQMStore::IBooker &ibooker,DQMStore::IGetter &igetter,const edm::LuminosityBlock& lumiSeg, const edm::EventSetup& c);
-  
  private:
   
   void book(DQMStore::IBooker &ibooker);
-  void processHistograms(DQMStore::IGetter &igetter);
+  void processHistograms(DQMStore::IGetter &igetter); 
+  virtual void fixZero(TH1F* histData, TH1F* histEmul);
   
   std::string monitor_dir_;
   std::string input_dir_data_;

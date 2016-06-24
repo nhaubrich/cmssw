@@ -24,6 +24,12 @@ void L1TdeStage2EMTF::bookHistograms(DQMStore::IBooker& ibooker, const edm::Run&
 
   ibooker.setCurrentFolder(monitorDir);
 
+  //RegionalMuonCand Output hw Plots
+  emtfMatchhwEta = ibooker.book1D("emtfMatchhwEta", "EMTF Match hw #eta", 920, -460, 460);
+  emtfMatchhwPhi= ibooker.book1D("emtfMatchhwPhi", "EMTF Match hw #phi", 250, -125, 125);
+  emtfMatchhwPt= ibooker.book1D("emtfMatchhwPt", "EMTF Match hw p_{T}", 1024, -512, 512);
+  emtfMatchhwQual= ibooker.book1D("emtfMatchhwQual", "EMTF Match hw Quality",32, -16, 16);
+
   emtfComparenMuonsEvent = ibooker.book2D("emtfComparenMuonsEvent", "Number of EMTF Muon Cands per Event", 12, 0, 12, 12, 0, 12);
   for (int axis = 1; axis <= 2; ++axis) {
     std::string axisTitle = (axis == 1) ? "Data" : "Emulator";
@@ -34,6 +40,8 @@ void L1TdeStage2EMTF::bookHistograms(DQMStore::IBooker& ibooker, const edm::Run&
     }
   }
  
+
+  //Track Plots
   emtfMatchEta = ibooker.book2D("emtfMatchEta","EMTF Match #eta", 100, -2.5, 2.5, 100, -2.5, 2.5);
   emtfMatchEta->setAxisTitle("Data #eta",1);
   emtfMatchEta->setAxisTitle("Emul #eta", 2);
@@ -63,6 +71,20 @@ void L1TdeStage2EMTF::bookHistograms(DQMStore::IBooker& ibooker, const edm::Run&
     emtfMatchQuality->setBinLabel(bin, std::to_string(bin - 1), 2);
     emtfMatchMode->setBinLabel(bin, std::to_string(bin - 1), 2);
   }
+
+  //Value Difference plots
+/*  emtfMuonhwEtaDifV_ = ibooker.book1D("emtfMuonhwEtaDifV", "Data #Eta - Emu #Eta", 920, -460, 460);
+  emtfMuonhwPhiDifV_ = ibooker.book1D("emtfMuonhwPhiDifV", "Data #Phi - Emu #Phi", 250, -125, 125);
+  emtfMuonhwPtDifV_ = ibooker.book1D("emtfMuonhwPtDifV", "Data p_{T} - Emu p_{T}", 1024, -512, 512);
+  emtfMuonhwQualDifV_ = ibooker.book1D("emtfMuonhwQualDifV","Data Quality - Emu Quality", 32, -16, 16);*/
+  
+  emtfTrackEtaDifV=ibooker.book1D("emtfTrackEtaDifV", "Data #Eta - Emu #Eta",200, -5, 5);
+  emtfTrackPhiDifV=ibooker.book1D("emtfTrackPhiDifV", "Data #Phi - Emu #Phi", 128, -3.2, 3.2);
+  emtfTrackPtDifV=ibooker.book1D("emtfTrackPtDifV", "Data p_{T} - Emu p_{T}", 512, -256, 256);
+  emtfTrackQualDifV=ibooker.book1D("emtfTrackQualDifV", "Data Quality - Emu Quality", 32, -16, 16);
+
+
+
 
 //  emtfCollectionSizes = ibooker.book1D("emtfCollectionSizes","EMTF CollectionSizes", 3,0,3);
 //  emtfCollectionSizes->setBinLabel(1,"Data Hits",1);
@@ -101,6 +123,35 @@ void L1TdeStage2EMTF::analyze(const edm::Event& e, const edm::EventSetup& c) {
     edm::Handle<l1t::EMTFTrackCollection> emulTrackCollection;
   e.getByToken(emultrackToken, emulTrackCollection);
 
+
+  //Best Match Regional Muon Cand plots
+  float minhwdR = 999999;
+  l1t::RegionalMuonCand closesthwData;
+  l1t::RegionalMuonCand closesthwEmul;
+ 
+  for (int itBXD = dataMuons->getFirstBX(); itBXD <= dataMuons->getLastBX(); ++itBXD) {
+    if  (itBXD > 1 || itBXD < -1) continue;
+    for (l1t::RegionalMuonCandBxCollection::const_iterator dataMuon = dataMuons->begin(itBXD); dataMuon != dataMuons->end(itBXD); ++dataMuon) {
+      for (int itBXE = emulMuons->getFirstBX(); itBXE <= emulMuons->getLastBX(); ++itBXE) {
+        if (itBXE > 1 || itBXE < -1) continue;
+        for (l1t::RegionalMuonCandBxCollection::const_iterator emulMuon = emulMuons->begin(itBXE); emulMuon != emulMuons->end(itBXE); ++emulMuon) {
+          int hwdPhi = dataMuon->hwPhi() - emulMuon->hwPhi();
+          float hwdEta = dataMuon->hwEta() - emulMuon->hwEta();
+          if((dataMuon->link() == emulMuon->link()) && (hwdPhi*hwdPhi + hwdEta*hwdEta) < minhwdR){
+            minhwdR = hwdPhi*hwdPhi + hwdEta*hwdEta;
+            closesthwData = *dataMuon;
+            closesthwEmul = *emulMuon;
+          }
+        }
+       }
+     }
+    }
+  emtfMatchhwEta->Fill(closesthwData.hwEta() - closesthwEmul.hwEta());
+  emtfMatchhwPhi->Fill(closesthwData.hwPhi() - closesthwEmul.hwPhi());
+  emtfMatchhwPt->Fill(closesthwData.hwPt() - closesthwEmul.hwPt());
+  emtfMatchhwQual->Fill(closesthwData.hwQual() - closesthwEmul.hwQual());
+  
+
     //Best Match Track plots
 
   float mindR = 999;
@@ -126,10 +177,17 @@ void L1TdeStage2EMTF::analyze(const edm::Event& e, const edm::EventSetup& c) {
   }
   if (mindR != 999){
     emtfMatchEta->Fill(closestData.Eta(), closestEmul.Eta());
+    emtfTrackEtaDifV->Fill(closestData.Eta() - closestEmul.Eta());  
     emtfMatchPhi->Fill(closestData.Phi_glob_rad(), closestEmul.Phi_glob_rad());
+    emtfTrackPhiDifV->Fill(closestData.Phi_glob_rad() - closestEmul.Phi_glob_rad());
     emtfMatchPt->Fill(closestData.Pt(), closestEmul.Pt());
+    emtfTrackPtDifV->Fill(closestData.Pt() - closestEmul.Pt());
     emtfMatchTrackBx->Fill(closestData.BX(), closestEmul.BX()); 
+    
     emtfMatchMode->Fill(closestData.Mode(), closestEmul.Mode());
+    
     emtfMatchQuality->Fill(closestData.Quality(), closestEmul.Quality());
-  } 
+    emtfTrackQualDifV->Fill(closestData.Quality() - closestEmul.Quality());
+} 
+
 } 
