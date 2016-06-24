@@ -39,19 +39,29 @@ class L1TdeStage2EMTF : public DQMEDAnalyzer {
 
   std::string monitorDir;
   bool verbose;
-  int dataTracks = 0;
-  int emulTracks = 0;
 
+  //Output Track Elements
   MonitorElement* emtfComparenMuonsEvent;
+  MonitorElement* emtfMuonMatchhwEta;
+  MonitorElement* emtfMuonMatchhwPhi;
+  MonitorElement* emtfMuonMatchhwPt;
+  MonitorElement* emtfMuonMatchhwQual;
+
+
 
   //Track Elements
-  MonitorElement* emtfMatchEta;
-  MonitorElement* emtfMatchPhi;
-  MonitorElement* emtfMatchPt;
-  MonitorElement* emtfMatchTrackBx;
-  MonitorElement* emtfMatchQuality;
-  MonitorElement* emtfMatchMode;
+  MonitorElement* emtfTrackMatchEta;
+  MonitorElement* emtfTrackMatchPhi;
+  MonitorElement* emtfTrackMatchPt;
+  MonitorElement* emtfTrackMatchBx;
+  MonitorElement* emtfTrackMatchQuality;
+  MonitorElement* emtfTrackMatchMode;
  
+  MonitorElement* emtfTrackEtaDif;
+  MonitorElement* emtfTrackPhiDif;
+  MonitorElement* emtfTrackPtDif;
+  MonitorElement* emtfTrackQualDif;
+
 };
 
 #endif

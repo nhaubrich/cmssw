@@ -29,7 +29,7 @@ l1tStage2Unpack = cms.Sequence(
     l1tCaloLayer1Digis +
     caloStage2Digis +
     BMTFStage2Digis +
-    #omtfStage2Digis +
+   #omtfStage2Digis +
     emtfStage2Digis +
     gmtStage2Digis +
     gtStage2Digis

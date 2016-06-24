@@ -24,6 +24,12 @@ void L1TdeStage2EMTF::bookHistograms(DQMStore::IBooker& ibooker, const edm::Run&
 
   ibooker.setCurrentFolder(monitorDir);
 
+  //RegionalMuonCand Output hw Plots
+  emtfMuonMatchhwEta = ibooker.book1D("emtfMuonMatchhwEta", "EMTF Muon Match hw #eta", 920, -460, 460);
+  emtfMuonMatchhwPhi= ibooker.book1D("emtfMuonMatchhwPhi", "EMTF Muon Match hw #phi", 250, -125, 125);
+  emtfMuonMatchhwPt= ibooker.book1D("emtfMuonMatchhwPt", "EMTF Muon Match hw p_{T}", 1024, -512, 512);
+  emtfMuonMatchhwQual= ibooker.book1D("emtfMuonMatchhwQual", "EMTF Muon Match hw Quality",32, -16, 16);
+
   emtfComparenMuonsEvent = ibooker.book2D("emtfComparenMuonsEvent", "Number of EMTF Muon Cands per Event", 12, 0, 12, 12, 0, 12);
   for (int axis = 1; axis <= 2; ++axis) {
     std::string axisTitle = (axis == 1) ? "Data" : "Emulator";
@@ -34,35 +40,44 @@ void L1TdeStage2EMTF::bookHistograms(DQMStore::IBooker& ibooker, const edm::Run&
     }
   }
  
-  emtfMatchEta = ibooker.book2D("emtfMatchEta","EMTF Match #eta", 100, -2.5, 2.5, 100, -2.5, 2.5);
-  emtfMatchEta->setAxisTitle("Data #eta",1);
-  emtfMatchEta->setAxisTitle("Emul #eta", 2);
 
-  emtfMatchPhi = ibooker.book2D("emtfMatchPhi","EMTF Match #phi", 126, -3.15, 3.15, 126, -3.15, 3.15);
-  emtfMatchPhi->setAxisTitle("Data #phi",1);
-  emtfMatchPhi->setAxisTitle("Emul #phi", 2);
+  //Track Plots
+  emtfTrackMatchEta = ibooker.book2D("emtfTrackMatchEta","EMTF Track Match #eta", 100, -2.5, 2.5, 100, -2.5, 2.5);
+  emtfTrackMatchEta->setAxisTitle("Data #eta",1);
+  emtfTrackMatchEta->setAxisTitle("Emul #eta", 2);
 
-  emtfMatchPt = ibooker.book2D("emtfMatchPt","EMTF Match p_{T}", 256, 1, 257, 256, 1, 257);
-  emtfMatchPt->setAxisTitle("Data p_{T}",1);
-  emtfMatchPt->setAxisTitle("Emul p_{T}", 2);
+  emtfTrackMatchPhi = ibooker.book2D("emtfTrackMatchPhi","EMTF Track Match #phi", 126, -3.15, 3.15, 126, -3.15, 3.15);
+  emtfTrackMatchPhi->setAxisTitle("Data #phi",1);
+  emtfTrackMatchPhi->setAxisTitle("Emul #phi", 2);
 
-  emtfMatchTrackBx = ibooker.book2D("emtfMatchTrackBx","EMTF Match Track Bx", 9, -4, 4, 9, -4 ,4);
-  emtfMatchTrackBx->setAxisTitle("Data Track Bx", 1);
-  emtfMatchTrackBx->setAxisTitle("Emul Track Bx", 2);
+  emtfTrackMatchPt = ibooker.book2D("emtfTrackMatchPt","EMTF Track Match p_{T}", 256, 1, 257, 256, 1, 257);
+  emtfTrackMatchPt->setAxisTitle("Data p_{T}",1);
+  emtfTrackMatchPt->setAxisTitle("Emul p_{T}", 2);
 
-  emtfMatchQuality = ibooker.book2D("emtfMatchQuality","EMTF Match Quality", 16, 0, 16, 16, 0, 16);
-  emtfMatchQuality->setAxisTitle("Data Quality",1);
-  emtfMatchQuality->setAxisTitle("Emul Quality", 2);
+  emtfTrackMatchBx = ibooker.book2D("emtfTrackMatchBx","EMTF Track Match Bx", 9, -4, 4, 9, -4 ,4);
+  emtfTrackMatchBx->setAxisTitle("Data Track Bx", 1);
+  emtfTrackMatchBx->setAxisTitle("Emul Track Bx", 2);
 
-  emtfMatchMode = ibooker.book2D("emtfMatchMode","EMTF Match Mode", 16, 0, 16, 16, 0, 16);
-  emtfMatchMode->setAxisTitle("Data Mode",1);
-  emtfMatchMode->setAxisTitle("Emul Mode", 2);
+  emtfTrackMatchQuality = ibooker.book2D("emtfTrackMatchQuality","EMTF Track Match Quality", 16, 0, 16, 16, 0, 16);
+  emtfTrackMatchQuality->setAxisTitle("Data Quality",1);
+  emtfTrackMatchQuality->setAxisTitle("Emul Quality", 2);
+
+  emtfTrackMatchMode = ibooker.book2D("emtfTrackMatchMode","EMTF Track Match Mode", 16, 0, 16, 16, 0, 16);
+  emtfTrackMatchMode->setAxisTitle("Data Mode",1);
+  emtfTrackMatchMode->setAxisTitle("Emul Mode", 2);
   for (int bin = 1; bin <= 16; ++bin) {
-    emtfMatchQuality->setBinLabel(bin, std::to_string(bin - 1), 1);
-    emtfMatchMode->setBinLabel(bin, std::to_string(bin - 1), 1);
-    emtfMatchQuality->setBinLabel(bin, std::to_string(bin - 1), 2);
-    emtfMatchMode->setBinLabel(bin, std::to_string(bin - 1), 2);
+    emtfTrackMatchQuality->setBinLabel(bin, std::to_string(bin - 1), 1);
+    emtfTrackMatchMode->setBinLabel(bin, std::to_string(bin - 1), 1);
+    emtfTrackMatchQuality->setBinLabel(bin, std::to_string(bin - 1), 2);
+    emtfTrackMatchMode->setBinLabel(bin, std::to_string(bin - 1), 2);
   }
+
+  //Difference plots
+ 
+  emtfTrackEtaDif=ibooker.book1D("emtfTrackEtaDif", "EMTF Track Data #eta - Emu #eta",200, -5, 5);
+  emtfTrackPhiDif=ibooker.book1D("emtfTrackPhiDif", "EMTF Track Data #phi - Emu #phi", 128, -3.2, 3.2);
+  emtfTrackPtDif=ibooker.book1D("emtfTrackPtDif", "EMTF Track Data p_{T} - Emu p_{T}", 512, -256, 256);
+  emtfTrackQualDif=ibooker.book1D("emtfTrackQualDif", "EMTF Track Data Quality - Emu Quality", 32, -16, 16);
 
 //  emtfCollectionSizes = ibooker.book1D("emtfCollectionSizes","EMTF CollectionSizes", 3,0,3);
 //  emtfCollectionSizes->setBinLabel(1,"Data Hits",1);
@@ -101,6 +116,36 @@ void L1TdeStage2EMTF::analyze(const edm::Event& e, const edm::EventSetup& c) {
     edm::Handle<l1t::EMTFTrackCollection> emulTrackCollection;
   e.getByToken(emultrackToken, emulTrackCollection);
 
+
+  //Best Match Regional Muon Cand plots
+  float minhwdR = 999999;
+  l1t::RegionalMuonCand closesthwData;
+  l1t::RegionalMuonCand closesthwEmul;
+ 
+  for (int itBXD = dataMuons->getFirstBX(); itBXD <= dataMuons->getLastBX(); ++itBXD) {
+    if  (itBXD > 1 || itBXD < -1) continue;
+    for (l1t::RegionalMuonCandBxCollection::const_iterator dataMuon = dataMuons->begin(itBXD); dataMuon != dataMuons->end(itBXD); ++dataMuon) {
+      for (int itBXE = emulMuons->getFirstBX(); itBXE <= emulMuons->getLastBX(); ++itBXE) {
+        if (itBXE > 1 || itBXE < -1) continue;
+        for (l1t::RegionalMuonCandBxCollection::const_iterator emulMuon = emulMuons->begin(itBXE); emulMuon != emulMuons->end(itBXE); ++emulMuon) {
+          int hwdPhi = dataMuon->hwPhi() - emulMuon->hwPhi();
+          float hwdEta = dataMuon->hwEta() - emulMuon->hwEta();
+          if((dataMuon->link() == emulMuon->link()) && (hwdPhi*hwdPhi + hwdEta*hwdEta) < minhwdR){
+            minhwdR = hwdPhi*hwdPhi + hwdEta*hwdEta;
+            closesthwData = *dataMuon;
+            closesthwEmul = *emulMuon;
+          }
+        }
+       }
+     }
+    }
+  if(minhwdR != 999999){
+    emtfMuonMatchhwEta->Fill(closesthwData.hwEta() - closesthwEmul.hwEta());
+    emtfMuonMatchhwPhi->Fill(closesthwData.hwPhi() - closesthwEmul.hwPhi());
+    emtfMuonMatchhwPt->Fill(closesthwData.hwPt() - closesthwEmul.hwPt());
+    emtfMuonMatchhwQual->Fill(closesthwData.hwQual() - closesthwEmul.hwQual());
+  }
+
     //Best Match Track plots
 
   float mindR = 999;
@@ -125,11 +170,18 @@ void L1TdeStage2EMTF::analyze(const edm::Event& e, const edm::EventSetup& c) {
     }
   }
   if (mindR != 999){
-    emtfMatchEta->Fill(closestData.Eta(), closestEmul.Eta());
-    emtfMatchPhi->Fill(closestData.Phi_glob_rad(), closestEmul.Phi_glob_rad());
-    emtfMatchPt->Fill(closestData.Pt(), closestEmul.Pt());
-    emtfMatchTrackBx->Fill(closestData.BX(), closestEmul.BX()); 
-    emtfMatchMode->Fill(closestData.Mode(), closestEmul.Mode());
-    emtfMatchQuality->Fill(closestData.Quality(), closestEmul.Quality());
+    emtfTrackMatchEta->Fill(closestData.Eta(), closestEmul.Eta());
+    emtfTrackEtaDif->Fill(closestData.Eta() - closestEmul.Eta());  
+    emtfTrackMatchPhi->Fill(closestData.Phi_glob_rad(), closestEmul.Phi_glob_rad());
+    emtfTrackPhiDif->Fill(closestData.Phi_glob_rad() - closestEmul.Phi_glob_rad());
+    emtfTrackMatchPt->Fill(closestData.Pt(), closestEmul.Pt());
+    emtfTrackPtDif->Fill(closestData.Pt() - closestEmul.Pt());
+    emtfTrackMatchBx->Fill(closestData.BX(), closestEmul.BX()); 
+    
+    emtfTrackMatchMode->Fill(closestData.Mode(), closestEmul.Mode());
+    
+    emtfTrackMatchQuality->Fill(closestData.Quality(), closestEmul.Quality());
+    emtfTrackQualDif->Fill(closestData.Quality() - closestEmul.Quality());
   } 
+
 } 
