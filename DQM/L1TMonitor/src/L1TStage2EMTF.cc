@@ -123,27 +123,34 @@ void L1TStage2EMTF::bookHistograms(DQMStore::IBooker& ibooker, const edm::Run&, 
   }
   emtfTrackBX->setAxisTitle("Track BX", 2);
   emtfTrackBX1D = ibooker.book1D("emtfTrackBX1D", "EMTF Track BX", 8, -3, 5);
-  emtfTrackBX1D->getTH1F()->Sumw2(); 
+
   emtfTrackBX->setAxisTitle("Track BX", 1);
   for (int bin = 1, i = -3; bin <= 8; ++bin, ++i) {
     emtfTrackBX->setBinLabel(bin, std::to_string(i), 2); 
+    emtfTrackBX1D->setBinLabel(bin, std::to_string(i), 1);
   }
 
 
   emtfTrackPt = ibooker.book1D("emtfTrackPt", "EMTF Track p_{T}", 256, 1, 257);
   emtfTrackPt->setAxisTitle("Track p_{T} [GeV]", 1);
-  emtfTrackPt->getTH1F()->Sumw2();
 
+  emtfTrackPtCoarse = ibooker.book1D("emtfTrackPtCoarse", "EMTF Track p_{T} (coarse)", 32, 1, 257);
+  emtfTrackPtCoarse->setAxisTitle("Track p_{T} [GeV]", 1);
+  //emtfTrackPtCoarse->getTH1F()->Sumw2();
 
   emtfTrackEta = ibooker.book1D("emtfTrackEta", "EMTF Track #eta", 100, -2.5, 2.5);
   emtfTrackEta->setAxisTitle("Track #eta", 1);
-  emtfTrackEta->getTH1F()->Sumw2();
 
+  emtfTrackEtaCoarse = ibooker.book1D("emtfTrackEtaCoarse", "EMTF Track #eta (coarse)", 20, -2.5, 2.5);
+  emtfTrackEtaCoarse->setAxisTitle("Track #eta", 1);
+  //emtfTrackEtaCoarse->getTH1F()->Sumw2();
 
   emtfTrackPhi = ibooker.book1D("emtfTrackPhi", "EMTF Track #phi", 128, -3.2, 3.2);
   emtfTrackPhi->setAxisTitle("Track #phi", 1);
-  emtfTrackPhi->getTH1F()->Sumw2();
 
+  emtfTrackPhiCoarse = ibooker.book1D("emtfTrackPhiCoarse", "EMTF Track #phi (coarse)", 32, -3.2, 3.2);
+  emtfTrackPhiCoarse->setAxisTitle("Track #phi", 1);
+  //emtfTrackPhiCoarse->getTH1F()->Sumw2();
 
   emtfTrackPhiHighQuality = ibooker.book1D("emtfTrackPhiHighQuality", "EMTF High Quality #phi", 128, -3.2, 3.2);
   emtfTrackPhiHighQuality->setAxisTitle("Track #phi (High Quality)", 1);
@@ -156,12 +163,10 @@ void L1TStage2EMTF::bookHistograms(DQMStore::IBooker& ibooker, const edm::Run&, 
 
   emtfTrackMode = ibooker.book1D("emtfTrackMode", "EMTF Track Mode", 16, 0, 16);
   emtfTrackMode->setAxisTitle("Mode", 1);
-  emtfTrackMode->getTH1F()->Sumw2();
 
 
   emtfTrackQuality = ibooker.book1D("emtfTrackQuality", "EMTF Track Quality", 16, 0, 16);
   emtfTrackQuality->setAxisTitle("Quality", 1);
-  emtfTrackQuality->getTH1F()->Sumw2();
 
 
   emtfTrackQualityVsMode = ibooker.book2D("emtfTrackQualityVsMode", "EMTF Track Quality vs Mode", 16, 0, 16, 16, 0, 16);
@@ -186,22 +191,33 @@ void L1TStage2EMTF::bookHistograms(DQMStore::IBooker& ibooker, const edm::Run&, 
 
   emtfMuonhwPt = ibooker.book1D("emtfMuonhwPt", "EMTF Muon Cand p_{T}", 512, 0, 512);
   emtfMuonhwPt->setAxisTitle("Hardware p_{T}", 1);
-  emtfMuonhwPt->getTH1F()->Sumw2();
+
+  emtfMuonhwPtCoarse = ibooker.book1D("emtfMuonhwPtCoarse", "EMTF Muon Cand p_{T} (coarse)", 32, 0, 512);
+  emtfMuonhwPtCoarse->setAxisTitle("Hardware p_{T}", 1);
+  //emtfMuonhwPtCoarse->getTH1F()->Sumw2();
+
 
   emtfMuonhwEta = ibooker.book1D("emtfMuonhwEta", "EMTF Muon Cand #eta", 460, -230, 230);
   emtfMuonhwEta->setAxisTitle("Hardware #eta", 1);
-  emtfMuonhwEta->getTH1F()->Sumw2();
+  //emtfMuonhwEta->getTH1F()->Sumw2();
+
+  emtfMuonhwEtaCoarse = ibooker.book1D("emtfMuonhwEtaCoarse", "EMTF Muon Cand #eta (coarse)", 46, -230, 230);
+  emtfMuonhwEtaCoarse->setAxisTitle("Hardware #eta", 1);
+  //emtfMuonhwEtaCoarse->getTH1F()->Sumw2();
+
 
   emtfMuonhwPhi = ibooker.book1D("emtfMuonhwPhi", "EMTF Muon Cand #phi", 125, -20, 105);
   emtfMuonhwPhi->setAxisTitle("Hardware #phi", 1);
-  emtfMuonhwPhi->getTH1F()->Sumw2();
+
+  emtfMuonhwPhiCoarse = ibooker.book1D("emtfMuonhwPhiCoarse", "EMTF Muon Cand #phi (coarse)", 25, -20, 105);
+  emtfMuonhwPhiCoarse->setAxisTitle("Hardware #phi", 1);
+  //emtfMuonhwPhiCoarse->getTH1F()->Sumw2();
 
   emtfMuonhwQual = ibooker.book1D("emtfMuonhwQual", "EMTF Muon Cand Quality", 16, 0, 16);
   emtfMuonhwQual->setAxisTitle("Quality", 1);
   for (int bin = 1; bin <= 16; ++bin) {
     emtfMuonhwQual->setBinLabel(bin, std::to_string(bin - 1), 1);
   }
-  emtfMuonhwQual->getTH1F()->Sumw2();
 
 }
 
@@ -315,8 +331,11 @@ void L1TStage2EMTF::analyze(const edm::Event& e, const edm::EventSetup& c) {
     emtfTrackBX->Fill(endcap * (sector - 0.5), BX);
     emtfTrackBX1D->Fill(BX);
     emtfTrackPt->Fill(Track->Pt());
+    emtfTrackPtCoarse->Fill(Track->Pt());
     emtfTrackEta->Fill(eta);
+    emtfTrackEtaCoarse->Fill(eta);
     emtfTrackPhi->Fill(phi_glob_rad);
+    emtfTrackPhiCoarse->Fill(phi_glob_rad);
     emtfTrackOccupancy->Fill(eta, phi_glob_rad);
     emtfTrackMode->Fill(mode);
     emtfTrackQuality->Fill(quality);
@@ -334,8 +353,11 @@ void L1TStage2EMTF::analyze(const edm::Event& e, const edm::EventSetup& c) {
     for (l1t::RegionalMuonCandBxCollection::const_iterator Muon = MuonBxCollection->begin(itBX); Muon != MuonBxCollection->end(itBX); ++Muon) {
       emtfMuonBX->Fill(itBX);
       emtfMuonhwPt->Fill(Muon->hwPt());
+      emtfMuonhwPtCoarse->Fill(Muon->hwPt());
       emtfMuonhwEta->Fill(Muon->hwEta());
+      emtfMuonhwEtaCoarse->Fill(Muon->hwEta());
       emtfMuonhwPhi->Fill(Muon->hwPhi());
+      emtfMuonhwPhiCoarse->Fill(Muon->hwPhi());
       emtfMuonhwQual->Fill(Muon->hwQual());
     }
   }
