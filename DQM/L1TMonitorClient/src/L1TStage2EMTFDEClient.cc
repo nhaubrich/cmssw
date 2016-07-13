@@ -1,5 +1,5 @@
 #include "DQM/L1TMonitorClient/interface/L1TStage2EMTFDEClient.h"
-#include <iostream>
+
 L1TStage2EMTFDEClient::L1TStage2EMTFDEClient(const edm::ParameterSet& ps):
   monitor_dir_(ps.getUntrackedParameter<std::string>("monitorDir","")),
   input_dir_data_(ps.getUntrackedParameter<std::string>("inputDataDir","")),

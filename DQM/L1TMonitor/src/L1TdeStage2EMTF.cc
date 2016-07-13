@@ -1,6 +1,5 @@
 #include <string>
 #include <vector>
-#include <iostream>
 #include "DQM/L1TMonitor/interface/L1TdeStage2EMTF.h"
 
 

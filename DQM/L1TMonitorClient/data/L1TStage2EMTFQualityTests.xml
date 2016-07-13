@@ -1,5 +1,6 @@
-<TESTSCONFIGURATION>
 
+<TESTSCONFIGURATION>
+<!-- Example EMTF Quality tests - currently commented out
     <QTEST name="DeadChannels_EMTF_2D">
         <TYPE>DeadChannel</TYPE>
         <PARAM name="error">0.80</PARAM>
@@ -40,3 +41,4 @@
 
 
 </TESTSCONFIGURATION>
+-->
